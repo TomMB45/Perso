@@ -1,0 +1,53 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch Exo15",
+            "request": "launch",
+            "mainClass": "sujet1/ex15.Exo15",
+            "projectName": "sujet1"
+        },
+        {
+            "type": "java",
+            "name": "Launch Exo11",
+            "request": "launch",
+            "mainClass": "sujet1/ex11.Exo11",
+            "projectName": "sujet1"
+        },
+        {
+            "type": "java",
+            "name": "Launch Exo8",
+            "request": "launch",
+            "mainClass": "sujet1/ex8.Exo8",
+            "projectName": "sujet1"
+        },
+        {
+            "type": "java",
+            "name": "Launch Exo7",
+            "request": "launch",
+            "mainClass": "sujet1/ex7.Exo7",
+            "projectName": "sujet1"
+        },
+        {
+            "type": "java",
+            "name": "Launch Exo4",
+            "request": "launch",
+            "mainClass": "sujet1/ex4.Exo4",
+            "projectName": "sujet1"
+        },
+        {
+            "type": "java",
+            "name": "Launch Exo2",
+            "request": "launch",
+            "mainClass": "sujet1/Ex2.Exo2",
+            "projectName": "sujet1"
+        },
+        {
+            "name": "Launch Chrome",
+            "request": "launch",
+            "type": "pwa-chrome",
+            "url": "http://localhost:8050",
+            "webRoot": "${workspaceFolder}"
+        }
+    ]
+}

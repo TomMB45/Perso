@@ -1,0 +1,732 @@
+---
+title: "CENTRE ANTOINE LACASSAGNE"
+author: "Responsable: Dr Emmanuel CHAMOREY  \nYann CHATEAU - Data Manager ~ Renaud
+  SCHIAPPA - Data Manager  \nDavid RENER - Data Manager ~ Dr Jocelyn GAL - Biostatisticien
+  \ \nBrice THAMPHYA - Bioinformaticien"
+date: 'Version du: 06/01/2021'
+output:
+  word_document:
+    reference_docx: Rapport_analyse_finale_template_markdown.docx
+    toc: yes
+    toc_depth: 4
+  html_document:
+    toc: yes
+    toc_depth: '4'
+    df_print: paged
+always_allow_html: false
+abstract: "RAPPORT STATISTIQUE FINAL  \n  \nGDA \n  \nLe biostatisticien et le data
+  manager devront être co-auteur et avoir validé toute publication utilisant les résultats
+  de ce rapport statistique"
+subtitle: DÉPARTEMENT ÉPIDÉMIOLOGIE, BIOSTATISTIQUES ET DONNÉES DE SANTÉ (DEBDS)
+---
+  
+```{r setup, include=F}
+encoding = "UTF-8"
+knitr::opts_chunk$set(echo = T, warning = FALSE, ft.align="left")
+```
+
+```{r echo = F, message=FALSE, warning=FALSE, include=FALSE}
+source("C:/Users/Tom/Documents/Cours/Polytech/4A/4A/S1/Analyse_données/PROJET/codageR_TOTAL_R_MARDOWN_EC_BT.R")
+source("C:/Users/Tom/Documents/Cours/Polytech/4A/4A/S1/Analyse_données/My_function.R")
+
+
+#librairies
+library(DataCombine)
+library(prodlim)
+library(binom)
+library(gsDesign)
+library(cvAUC)
+library(caret)
+library(vcd)
+library(greyzoneSurv)
+library(mgcv)
+library(randomForest)
+library(datasets)
+library(keras)
+library(mlbench)
+library(magrittr)
+library(neuralnet)
+library(tensorflow)
+library(openxlsx)
+library(broom)
+library(flextable)
+#library(idefix)
+library(magrittr)
+library(dplyr)
+library(officer)
+library(stringr)
+library(forcats)
+library(regclass)
+library(car)
+library(epiDisplay)
+library(caTools)
+library(ggcorrplot)
+#library(questionr)
+library(plotly)
+library(MASS)
+library(GGally)
+library(broom.helpers)
+library(forestmodel)
+library(xgboost)
+library(Matrix)
+library(flextable)
+library(pROC)
+library(skimr)
+library(Amelia)
+```
+
+```{r echo=F}
+##### paramétrage des sorties tableaux
+etude= ""
+version= ""
+biostat= ""
+dm= ""
+nom_rapport= "RAPPORT_STATISTIQUE_FINAL6"
+auteur_rapport= ""
+valide_par= ""
+
+invest= ""
+fichier_o= ""
+syntaxe=""
+donnees= ""
+log= "R 3.6.1"
+com= "RAS"
+
+col1=c("Étude","Version","Biostatisticien","Data Manager","Nom du Rapport","Auteur du Rapport","Validé par","Investigateur","Fichier original","Syntaxe","Données analysées","Logiciel","Commentaires")
+col2=c(etude,version,biostat,dm,nom_rapport,auteur_rapport,valide_par,invest,fichier_o,syntaxe,donnees,log,com)
+
+d1=data.frame(col1,col2)
+
+ft <- flextable(d1)
+ft <- align(ft, align = "left")
+ft <- bold(ft, j=1, bold = TRUE, part = "body")
+ft <- delete_part(ft, part = "header")
+ft=fontsize(ft,size = 8, part = "all")
+ft <- autofit(ft)
+ft=FitFlextableToPage(ft)  ##  à utiliser si le tableau dépasse des marges
+#ft
+rm(ft)
+```
+
+**VALIDATION DU RAPPORT D'ANALYSE FINALE**
+  
+```{r echo=F}
+tabvalid<-data.frame(Fonction=c("Biostatisticien","Data manager","Investigateur coordonnateur","Chef de projet","Responsable"),Nom=c("","",""," ","") ,Prenom=c("","",""," ",""),Date="        ",Signature="                    ")
+
+ft <- flextable(tabvalid)
+ft<-autofit(ft)
+ft <- bold(ft, j=1, bold = TRUE, part = "body")
+ft <- bold(ft, bold = TRUE, part = "header")
+ft=fontsize(ft,size = 8, part = "all")
+ft <- align(ft, align = "left", part = "all" )
+ft <- align(ft, j=4, align = "center", part = "body")
+ft=height_all(ft, 0.6, part = "body")
+ft=border_outer(ft,border = fp_border(color="black"), part = "all")
+ft=border_inner_h(ft,border = fp_border(color="black"), part = "all")
+ft=border_inner_v(ft,border = fp_border(color="black"), part = "all")
+# ft=FitFlextableToPage(ft) ##  à utiliser si le tableau dépasse des marges
+#ft
+rm(ft)
+```
+
+# Import et Pré-traitement avant analyse de la base de données
+
+``` {r echo=F}
+#df = readxl::read_xlsx(path = "......./PROJET/données_sources/BDD.xlsx",
+df = readxl::read_xlsx(path = "C:/Users/Tom/Documents/Cours/Polytech/4A/4A/S1/Analyse_données/PROJET/données_sources/BDD_BIS.xlsx",
+               sheet = 1,
+               col_names = TRUE,
+               col_types = "text",
+               na = c(NA,"NE",""))
+
+############################## ASSOCIATION DU BON TYPE A CHAQUE COLONNE
+
+#on traite cette colonne séparément (on la convertit en factor) car elle contient des modalités avec des lettres "4A" et "4B" ...
+df[12]=as.factor(df[[12]])
+
+#ici on convertit les colonnes de type texte en type numeric
+#col_indx_to_number = c( 1:3 , 5:37, 39:75 , 77:107 , 109:119 , 122:133 , 135:(ncol(df)-1) ) #sauf les colonnes 4,76,108,120,121,134,161 qui doivent rester en type "character"
+#df[,col_indx_to_number] = lapply( df[,col_indx_to_number] , as.numeric)
+
+#ici on convertit les colonnes en type factor
+col_indx_to_factor = c( 1:10,12,15:(ncol(df)) ) 
+df[,col_indx_to_factor] = lapply( df[,col_indx_to_factor] , as.factor)
+
+#ici on convertit les colonnes en type factor
+col_indx_to_numeric = c(11,13,14) 
+df[,col_indx_to_numeric] = lapply( df[,col_indx_to_numeric] , as.numeric)
+
+############################## SELECTION DES PATIENTS ELIGIBLE
+
+#on ne sélectionne seulement les patients éligibles
+df=df[df$X1==1,]
+
+############################ RECODAGE DE VARIABLES CATEGORIELLES
+
+df$X17[df$X17 %in% c(0,1)] = 0
+df$X17[df$X17 %in% c(2,3)] = 1
+df$X17=factor(df$X17)
+names(df)[which(names(df)=="X17")]="X17_regroup"
+
+df$X12[df$X12 %in% c(2,3)] = 3
+df$X12=factor(df$X12)
+names(df)[which(names(df)=="X12")]="X12.Score"
+
+############################## DERNIER TRAITEMENT POUR "ENJOLIVER" LA BASE
+
+mettre_en_forme <- function(bdd) {
+  
+  ## MISE EN FORME DE LA VARIABLE DINTERET "Y"
+  bdd=bdd[-which(names(bdd)=="Y1")]
+
+  names(bdd)[which(names(bdd)=="Y2")]="Y"
+  
+  bdd=bdd[-which(names(bdd)=="X1")]
+  
+   #bdd= bdd[ c( which(lapply(bdd, is.factor)==TRUE) , which(lapply(bdd, is.numeric)==TRUE) , which(lapply(bdd, is.character)==TRUE) ) ]
+  bdd= bdd[ c( which(lapply(bdd, is.factor)==TRUE) , which(lapply(bdd, is.numeric)==TRUE) ) ]
+  
+  bdd = bdd %>% relocate(Y)
+  
+  names(bdd)=str_replace_all(names(bdd),"/","_")
+  
+  return(bdd) 
+}
+
+df=mettre_en_forme(df)
+
+df$X4 <- fct_recode(df$X4,
+"<55"= "0",
+"≥55"="1"
+)
+
+df$X7<- fct_recode(df$X7,
+"No"= "0",
+"Yes"="1"
+)
+
+df$X9 <- fct_recode(df$X9,
+"No"= "0",
+"Yes"="1"
+)
+
+df$X10 <- fct_recode(df$X10,
+"No"= "0",
+"Yes"="1"
+)
+
+df$X8 <- fct_recode(df$X8,
+"No"= "0",
+"Yes"="1"
+)
+
+df$X12.Score <- fct_recode(df$X12.Score,
+"2-3"= "3",
+"4A"="4A",
+"4B"="4B",
+)
+
+df=df[c(1:10,15,11,16,17,12:14)]
+```
+
+
+# Analyse descriptive 
+```{r dim et seed, include=T}
+dim(df)
+set.seed(12345) #Fixation de la graine
+```
+Pour commencer, la dimension de la base de données est de 17 colonnes et 1335 lignes.\n 
+Nous avons donc 17 variables pour 1335 patients.
+
+## Analyse des variables de la cohorte totale
+### Analyse des NA 
+
+A présent, nous allons mettre en évidence les variables utilisables pour la suite de l'étude. C'est à dire celles avec un pourcentage de valeurs manquantes inférieur à 10 %.
+
+```{r analyse de toutes les données}
+md_table(as.data.frame(skim(df)))
+```
+
+Suite à cette analyse nous avons mis en évidence que nous ne pouvons pas utiliser les variables suivantes lors des analyses univarée et multivariée:\n
+
+X14: Cette variable présente 95.81% de NA. \n
+X11: Cette variable présente 36.93% de NA. \n
+
+Nous utiliserons donc toutes les autres variables pour ces deux analyses. Sachant que les patients éligibles ont déjà été sélectionné dans le pré-traitement.
+
+```{r carte des Na,fig.height=20,fig.width=20}
+missmap(df, col=c("blue", "red"), legend=T)
+```
+
+Ces résultats sont confirmés visuellement par la missmap. Celle-ci met également en évidence la potentielle corrélation entre les variables X6 et X7. En effet, lorsqu'un NA est observé pour X6 il est souvent observé pour X7, et inversement. 
+
+### 2) Analyse des variables qualitatives
+```{r analyse quali}
+index=c(1:ncol(df)) 
+ft=sortiequali(as.data.frame(df),index)
+ft=md_table(ft)
+ft 
+rm(ft,index)
+```
+
+Dans un premier temps, on se focalise sur les vides. Pour les variables X5,X6,X7,X17_regroup, les pourcentages de vides oscillent entre 8 et 10%. Ces variables seront donc sans doute supprimées du modèle final. 
+
+Dans un second temps, on regarde la fréquence des modalités de chaque variable. On observe que pour X6 et X16 la modalité 0 semble corrélée avec un cancer bénin. Pour les modalités X7,X8 et X10 c'est la modalité "no" qui semble corrélée avec un cancer bénin. On peut émettre ces conclusions car la fréquence de ces modalités est supérieure à 90%. 
+
+
+
+### 3) Analyse des variables quantitatives
+```{r analyse quanti}
+index=c(11,13,14) 
+ft=sortiequanti(as.data.frame(df),index)
+ft=md_table(ft)
+ft 
+rm(ft,index)
+```
+
+Pour les variables X14 et X11, on observe un nombre de vide très important (surtout X14), ce qui suggère comme précedement que ces variables seront supprimées du modèle final.
+
+Pour X11 on observe que la moyenne est proche de la médiane, ce qui est en corrélation avec le faible écart-type observé, traduisant ainsi une faible variabilité. En revanche, pour X13 et X15, la moyenne s'éloigne un peu plus de la médiane ce qui est en corrélation avec des écart-types beaucoup plus importants.
+
+
+
+## B) Création de sous groupes en fonction du centre 
+
+L'objectif de cette partie est de créer les cohortes de validation et d'apprentissage.\n
+
+Il y a deux cohortes de validation: \n
+
+Validation externe: Toulouse\n
+
+Validation interne: 30% des patients de Nice\n
+
+La cohorte d'apprentissage contient les 70% restants des patients niçois.\n
+
+```{r,echo=T,include=T}
+valid<-rbind(df[(df$X2==4),],df[(df$X2==5),]) #Toulouse
+Nice<-rbind(df[(df$X2==1),],df[(df$X2==2),],df[(df$X2==3),],df[(df$X2==6),])#Nice
+appren_int<-sample(nrow(Nice),nrow(Nice)*0.7)#récupération aléatoire des indices des lignes de l'échantillon
+appren<-Nice[appren_int,]
+valid_2<-Nice[-appren_int,]
+dim(appren) #cohorte d'apprentissage 70% Nice.
+dim(valid) #cohorte validation externe (Toulouse)
+dim(valid_2) #cohorte de validation interne (30% Nice)
+```
+
+On obtient alors une cohorte d'apprentissage avec `r dim(appren)[1]` patients.\n
+Ainsi, qu'une cohorte de validation externe de `r dim(valid)[1]` patients.\n
+Puis une cohorte de validation interne de `r dim(valid_2)[1]` patients.\n
+
+
+### 1) Analyse descriptive de la cohorte d'apprentissage
+#### 1.a) Analyse de toutes les variables 2 à 2
+```{r analyse de toutes les variables 2 à 2,message=FALSE, warning=FALSE}
+ggp<-ggpairs(as.data.frame(appren))
+ggp
+```
+L'objectif de cette fonction est de nous donner un aspect plus visuel d'une variable par rapport à une autre. On observe pour la variable X8 une majorité de non, à l'inverse de la variable X6 et X7 qui ont une majorité de yes. 
+
+####1.b) Analyse descriptive des variables qualitatives
+```{r analyse quali2}
+index=c(1:ncol(appren)) 
+ft=sortiequali(as.data.frame(appren),index)
+ft=md_table(ft)
+ft 
+rm(ft,index)
+```
+
+Concernant l'analyse des vides. Pour les variables X5,X6,X17_regroup, les pourcentages de vides sont compris entre 7 et 9%. Ces variables seront donc sans doute supprimées du modèle final, comme remarqué précédement sur la cohorte totale. 
+
+Dans un second temps, on regarde la fréquence des modalités de chaque variable. On observe que pour X6 et X16 la modalité 0 semble corrélée avec un cancer bénin. 
+
+Pour les modalités X8 et X10 c'est la modalité "no" qui semble corrélée avec un cancer bénin. On peut émettre ces conclusions car la fréquence de ces modalités est supérieure à 90%. 
+
+
+####1.c) Analyse descriptive des variables quantitatives
+```{r analyse quanti2}
+index=c(11,13,14) 
+ft=sortiequanti(as.data.frame(appren),index)
+ft=md_table(ft)
+ft 
+rm(ft,index)
+```
+
+Pour les variables X14 et X11, on observe un nombre de vide très important (surtout X14), ce qui suggère comme précedement que ces variables seront supprimées du modèle final.
+
+Pour X11, X13, X14 on observe que la moyenne est proche de la médiane, ce qui est en corrélation avec le faible écart-type observé pour X11 notamment. Concernant X14, l'écart type est légérement plus important. Pour X13 en revanche on observe un écart-type beaucoup plus important, donc on ne peut pas le mettre en corrélation avec le fait que la moyenne soit proche de la médiane.
+
+### 2) Analyse descriptive de la cohorte de validation externe (Toulouse)
+#### 2.a) Analyse descriptive des variables qualitatives 
+```{r,include=T}
+index=c(1:ncol(valid)) 
+ft=sortiequali(as.data.frame(valid),index)
+ft =md_table(ft)
+ft 
+rm(ft,index)
+```
+
+Dans un premier temps, on se focalise sur les vides. Pour la cohorte de validation externe on observe un pourcentage de vide égal à 0 (ou proche) pour les variables X2,X3,X4,X8, X12.Score et X15. Pour les autres présente un pourcentage de vide compris entre 7% et 25% (X5 notamment).
+
+Dans un second temps, on regarde la fréquence des modalités de chaque variable. On observe que pour X6 la modalité 0 semble corrélée avec un cancer bénin et pour X16 il n'y aucun doute que la modalité 0 soit corrélée avec un cancer bénin puisque celle-ci est représentée à 100%.
+
+Pour les modalités X7,X8 et X10 c'est la modalité "no" qui semble corrélée avec un cancer bénin. On peut émettre ces conclusions car la fréquence de ces modalités est supérieure à 90%.
+
+#### 2.b) Analyse descriptive des variables quantitatives 
+```{r}
+index=c(11,13,14) 
+ft=sortiequanti(as.data.frame(valid),index)
+ft=md_table(ft)
+ft 
+rm(ft,index)
+```
+
+Ici, on observe pour les deux variables X11 et X13 que la moyenne est proche de la médiane. Toutefois, ceci est corrélé avec l'écart type de X11 (très faible) mais pas pour X13 dont l'écart type est trop important. 
+
+Cependant pour la variable X14 la valeur de la moyenne est le double de la médiane, donc en corrélation avec un écart type très élevé. Cela nous indique donc que cette variable ne sera sans doute pas dans notre modèle final.
+
+### 3) Analyse descriptive de la cohorte de validation interne (30% Nice)
+#### 3.a) Analyse descriptive des variables qualitatives 
+```{r,include=T}
+index=c(1:ncol(valid_2)) 
+ft=sortiequali(as.data.frame(valid_2),index)
+ft=md_table(ft)
+ft 
+rm(ft,index)
+```
+
+A propos des vides, pour les variables X6,X7,X17_regroup, les pourcentages de vides sont compris entre 9 et 11%. Ces variables seront donc sans doute supprimées du modèle final.
+
+
+Dans un second temps, on regarde la fréquence des modalités de chaque variable. On observe que pour X6 la modalité 0 semble corrélée avec un cancer bénin et pour X16 il n'y aucun doute que la modalité 0 soit corrélée avec un cancer bénin puisque celle-ci est représentée à 100%.
+
+Pour les modalités X8 et X10 c'est la modalité "no" qui semble corrélée avec un cancer bénin. On peut émettre ces conclusions car la fréquence de ces modalités est supérieure à 90%.
+
+#### 3.b) Analyse descriptive des variables quantitatives 
+```{r}
+index=c(11,13,14) 
+ft=sortiequanti(as.data.frame(valid_2),index)
+ft=md_table(ft)
+ft 
+rm(ft,index)
+```
+
+Ici, on observe pour les deux variables X11 et X13 que la moyenne est proche de la médiane. Toutefois, ceci est corrélé avec l'écart type de X11, qui est faible, mais pas pour X13 dont l'écart type est plus important. 
+
+Cependant pour la variable X14 la moyenne est plus éloignée de la médiane comparé à X11 et X13, en corrélation avec un écart type important.
+
+
+# III) Analyse uni-variée (uniquement sur la cohorte d'apprentissage)
+## A)Suppression des modalités non observées
+
+Certaines variables présentent des modalités qui ne sont pas représentées dans la cohorte d'apprentissage. C'est pourquoi dans un premier temps, nous avons décidé de les supprimer. \n
+
+Dans un deuxième temps, nous avons supprimé les variables qui ont au moins une modalité toujours associée à la même modalité de la variable cancer.\n 
+
+En l'absence de ces suppressions, il est impossible de réaliser les tests statisques avec tableStack.
+
+```{r}
+appren<-drop_level_0_and_unassociate(appren,1)
+```
+
+## B) Suppression des variables avec une modalité observée inférieure ou égale à 10 %
+
+L'analyse univariée requiert la suppression des variables présentant des modalités avec une fréquence d'apparition inférieure ou égale à 10%.
+
+```{r}
+cols<-numcol(c("X6","X8", "X10"),appren)
+appren<-appren[,-cols]
+dim(appren)
+```
+Suite à ces suppressions, il nous reste donc `r dim(appren)[2]-1` variables, plus la variable cancer pour `r dim(appren)[1]` patients.
+
+## C) Analyse statistique de toutes les variables en fonction de la variable cancer 
+
+L'objectif ensuite est de déterminer quelles sont les variables significatives par rapport à la variable cancer. \n
+Pour cela on utilise la fonction tableStack, qui réalise les tests statistiques adaptés.\n
+
+```{r}
+tt=tableStack(vars=3:ncol(appren),
+              by=1,
+              dataFrame=as.data.frame(appren),
+              na.col=T)
+bold_lines=which(tt[,1] %in% colnames(appren))#Met les noms en gras
+colnames(tt)[1:3]=c("CANCER","Benin","Malin") #On attribue les noms des colonnes
+md_table(tt,bold.names=bold_lines)
+```
+
+## D) Récupération des indices des colonnes correspondant aux variables significatives
+
+```{r}
+signif=col_significatives(appren,tt,indice=T,nb_début_vars_TableStack = 3)
+signif
+```
+
+## E) Tableau récapitulatif des valeurs significatives
+
+Création d'un nouveau data-frame contenant les variables significatives et la variable cancer.
+```{r}
+appren_nett<-appren[,c(1,signif)]
+
+tt=tableStack(vars=2:ncol(appren_nett),
+              by=1,
+              dataFrame=as.data.frame(appren_nett),
+              na.col=T)
+bold_lines=which(tt[,1] %in% colnames(appren_nett))#Met les noms en gras
+colnames(tt)[1:3]=c("CANCER","Benin","Malin") #on attribue les noms des colonnes
+md_table(tt,bold.names=bold_lines)
+```
+On obtient alors `r length(signif)` variables significatives, ainsi que la variable Y. 
+
+# IV) Analyse multivariée (uniquement sur la cohorte d'apprentissage)
+## A) Analyse de la colinéarité entre les variables 
+
+Dans un premier temps, on supprime les lignes comportant au moins un NA pour éviter les problèmes lors de l'analyse.\n
+
+```{r}
+appren_nett<-na.omit(appren_nett)
+# dim(appren_nett)# = 553  12
+```
+
+Pour débuter l'analyse de la colinéarité on crée un Modèle Linéaire Généralisé (GLM) en tant que modèle initial. Ce modèle logistique permettra l'analyse des Facteurs d'Inflation de Variance (VIF).
+
+```{r}
+formula = as.formula(paste("Y ~ ", paste(names(appren_nett)[-1], collapse= "+") ))
+model = glm(formula, data=appren_nett,family = binomial())
+```
+
+Nous avons d'abord regardé si certaines variables étaient aliassées.
+
+```{r}
+ld.vars <- attributes(alias(model)$Complete)$dimnames[[1]]
+ld.vars
+```
+Aucune d'entre elles ne le sont, ce qui signifie qu'il n'y a pas de corrélation parfaite avec la variable Y (cancer), ce qui nous permet de poursuivre l'analyse avec les VIF. \n
+
+```{r}
+corr=vif(model)
+tabl=cbind("Variable"=rownames(corr),corr)
+colnames(tabl)[2]="VIF"
+md_table(tabl)
+```
+Suite à ça nous avons mis en évidence qu'aucune des variables ne semble trop corrélée avec Y car aucun des VIF n'est supérieur à 3.
+
+## B) Modèle initial
+### 1) Minimisation de l'AIC
+Après avoir vérifié la corrélation entre les variables et la variable cancer, on recrée un modèle logistique. 
+
+```{r}
+formula = as.formula(paste("Y ~ ", paste(names(appren_nett)[-1], collapse= "+") ))
+model_initial = glm(formula, data=appren_nett,family = binomial())
+summary(model_initial)
+```
+
+On obtient alors un AIC initial de: \n
+```{r}
+round(AIC(model_initial),digits = 1)
+```
+
+On essaye alors de diminuer cet AIC par une méthode pas à pas descendante. Pour cela, on utilise la fonction stepAIC du module MASS.\n
+
+```{r}
+model_final<-stepAIC(model_initial)
+```
+
+### 2) Modèle final
+```{r}
+round(AIC(model_final),digits=1)
+```
+```{r}
+summary(model_final)
+```
+
+On arrive alors à obtenir une valeur d'AIC plus faible de `r round(AIC(model_final),digits=1)`, avec trois variables: X7,X12.Score et X15. 
+
+### 3) Analyse des résidus du modèle final
+```{r}
+plot(model_final)
+```
+
+```{r}
+res<-rstudent(model_final)
+plot(res,pch=15,cex=.5,ylab="Résidus",main="",ylim=c(-3,3))
+abline(h=c(-2,0,2),lty=c(2,1,2))
+```
+Ces graphiques nous permettent de mettre en évidence la normalité et l'homoscédasticité. \n
+En effet, on observe que ceux-ci suivent globalement une loi normale (alignés sur le graphique "Normal Q-Q") et qu'ils sont répartis de façon homogène sur le dernier graphique. \n
+Cela démontre la régularité de la variance sur le domaine de la variable et donc, qu'il n'y a pas de biais. \n
+
+On supprime alors les variables qui ne se retrouvent pas dans le modèle final.
+```{r warning=FALSE}
+cols_to_supress=c(2,3,5,7,9) 
+appren_nett<- subset(appren_nett,select = -cols_to_supress)
+```
+
+
+```{r warning=FALSE}
+interval_conf<-confint(model_final)
+md_table(as.data.frame(cbind(c("Intercept","X7Yes","X12.Score4A","X12.Score4B","X12.Score5","X154","X155") ,interval_conf)))
+```
+
+### 4) Evaluation du modèle 
+Pour évaluer le modèle final, on regarde en premier lieu s'il y a bien une différence entre le modèle initial et le modèle final. \n
+Pour cela on réalise un test du chi2 : \n
+```{r}
+anova(model_initial, model_final, test = "Chisq")
+```
+On obtient alors une p-value > 0.05, ce qui signifie qu'il n'y a pas de différence significative entre le modèle initial et le modèle final. Cela montre alors que nos deux modèles cohérents car peu de variables ont été supprimées lors de la méthode de minimisation de l'AIC..
+
+Dans un second temps on réalise un test statistique de Wald, pertinent au vu de l'utilisation du modèle GLM. \n
+```{r Anova}
+car::Anova(model_final,test.statistic = "Wald")
+```
+On retrouve bien que les variables X7, X12.Score et X15 influencent significativement la valeur de la variable cancer, comme on pouvait le voir avec le summary du modèle final au début de cette partie. \n
+
+
+```{r odd ratio,fig.height=5,fig.width=8}
+ggcoef_model(model_final, exponentiate = TRUE)
+```
+
+```{r,fig.height=5,fig.width=10}
+forest_model(model_final)
+```
+Pour continuer l'évaluation de notre modèle nous avons ensuite analyser les odds ratios. \n
+
+Sur le graphique on peut observer l'effet délétère ou bénéfique d'une variable par rapport à la variable cancer. \n
+En effet, lorsque le point est à droite de la modalité de référence qui a un effet neutre sur la valeur de la variable cancer, on observe un effet délétère. On retrouve visuellement cela pour les variables X7 et X12 par exemple, ce qui est confirmé par le fait que les p-value sont inférieures à 0.05.\n
+
+A l'inverse, lorsqu'il est à gauche cela traduit un effet bénéfique, comme observé pour la modalité 4 de la variable X15 mais, cela ne semble pas significatif au vu de la valeur de la p-value.\n
+
+
+## C) Validation du modèle 
+
+Pour finir, nous allons essayer de valider notre modèle en calculant les accuracy sur les différentes cohortes et en réalisant des prédictions.\n
+
+L'accuracy correspond à la somme des vrais positifs et vrais négatifs divisée par le nombre total et multipliée par 100 pour exprimer les résultats sous forme de pourcentage. Cette valeur nous permet d'évaluer la qualité du modèle. \n
+
+En plus de cela on analyse la spécificité et la sensibilité. La spécificité correspond au taux de vrais négatifs et la sensibilité correspond quant-à elle au taux de vrais positifs. Ces deux paramètres sont important car ils permettent d'analyser la capacité du test à catégoriser les patients. Pour nos données, ces deux paramètres ont une importance équivalente, on va donc regarder s'ils sont proches. On réalise aussi des matrices de confusion. 
+
+### 1) Accuracy sur la cohorte d'apprentissage
+```{r}
+pred_appren<-predict.glm(model_final,appren_nett,type="response")
+accuracy_appren<-accuracy(pred_appren,appren_nett$Y)
+md_table(as.data.frame(accuracy_appren),fit=F)
+```
+
+Premièrement, on observe que l'accuracy sur la cohorte d'apprentissage, à partir de laquelle nous avons crée notre modèle, est plutôt importante : `r accuracy_appren$Accuracy`%. \n Cela signifie que la qualité de notre modèle est optimale. \n
+
+On observe que les pourcentages de spécificité et sensibilité sont très importants, respectivement `r accuracy_appren$Spécificité`% et `r accuracy_appren$Sensibilité`%. Au vu des proportions de malins/ bénins dans le modèle initial, le fait que la spécificité et la sensibilité soient proches montre que la normalisation a bien était effectuée et que l'on peut alors prédire aussi bien ces deux modalités.
+
+
+### 2) Accuracy sur la cohorte de validation interne Nice
+
+
+```{r}
+pred_valid_interne<-predict.glm(model_final,valid_2,type="response")
+accuracy_valid_interne<-accuracy(pred_valid_interne,valid_2$Y)
+md_table(as.data.frame(accuracy_valid_interne),fit=F)
+```
+
+### 3) Accuracy sur la cohorte de validation externe Toulouse
+
+```{r}
+pred_valid_externe<-predict.glm(model_final,valid,type="response")
+accuracy_valid_externe<-accuracy(pred_valid_externe,valid$Y)
+md_table(as.data.frame(accuracy_valid_externe),fit=F)
+```
+Deuxièmement, on s'intéresse aux accuracy sur les cohortes de validation interne et externe. Toutes deux étant supérieures à 70%, respectivement `r accuracy_valid_interne$Accuracy`% et `r accuracy_valid_externe$Accuracy`%, ce qui confirme la qualité de notre modèle. \n
+
+Pour les deux cohortes de validation, on observe que les spécificités et sensibilités sont assez élevées, bien que plus faibles que celles de la cohorte d'apprentissage (résultat attendu). De plus, celle-ci sont toujours assez similaires ce qui correspond à ce que l'on attendait et qui confirme la qualité de notre modèle. 
+
+### 4) Courbe de ROC
+
+Pour finir, on réalise une courbe de ROC pour analyser visuellement la spécificité et la significativité de notre modèle. \n
+```{r}
+roc_appren<-roc(appren_nett$Y,pred_appren)
+roc_valid_int<-roc(valid_2$Y,pred_valid_interne)
+roc_valid_ext<-roc(valid$Y,pred_valid_externe)
+plot(roc_appren,print.auc=T,print.auc.x=1.3,print.auc.y=1)
+plot(roc_valid_int,print.auc=T,col="Blue",print.auc.col="Blue",add=T,print.auc.x=1.3,print.auc.y=0.95)
+plot(roc_valid_ext,print.auc=T,col="green",print.auc.col="green",add=T,print.auc.x=1.3,print.auc.y=0.9)
+legend(0.2, 0.2, c("Apprentissage","Validation interne","Validation externe"),col=c("black","Blue","green"), lty=1, cex=0.8)
+
+#Calcul des intervalles de confiance des AUC de chacune des cohortes
+ci.auc(roc_appren)
+ci.auc(roc_valid_int)
+ci.auc(roc_valid_ext)
+```
+On observe alors que les aires sous la courbe (AUC) des 3 courbes (3 cohortes) sont assez importantes et similaires. On vérifie bien que les intervalles confiance se recoupent entre eux, ce qui termine l'évaluation de la qualité de notre modèle. \n
+Le fait que les aires soient importantes démontre un certain équilibre entre spécificité et significativité de notre modèle. \n
+
+
+# Bonus : Test XGB avec cross validation 
+** ressource : https://www.kaggle.com/rtatman/machine-learning-with-xgboost-in-r/notebook ** 
+```{r Passage toutes les varaiables en numeric}
+df$Y<-as.numeric(df$Y)-1
+df$X7<-as.numeric(df$X7)
+df$X12.Score<-as.numeric(df$X12.Score)
+df$X15<-as.numeric(df$X15)
+```
+
+```{r}
+df_xgb_imp<-df[,c("Y","X15","X7","X12.Score")]
+
+df_remove_Y<-df_xgb_imp %>% select(-df_xgb_imp$Y)
+
+diseaseLabels <- df_xgb_imp %>% select(Y) %>% magrittr::not()
+
+diseaseInfo_numeric <- df_remove_Y
+diseaseInfo_matrix <- data.matrix(diseaseInfo_numeric)
+numberOfTrainingSamples <- round(length(diseaseLabels) * .7) #permet de séparer en 30%-70 pour cross validation
+
+train_data <- diseaseInfo_matrix[1:numberOfTrainingSamples,]
+train_labels <- diseaseLabels[1:numberOfTrainingSamples]
+
+test_data <- diseaseInfo_matrix[-(1:numberOfTrainingSamples),] #tableau apprentissage avec toutes les variables explicatives 
+test_labels <- diseaseLabels[-(1:numberOfTrainingSamples)] #tableau d'apprentissage avec les lignes de la variable à expliquer 
+
+#création de matrice des données utilisables par XGB 
+dtrain <- xgb.DMatrix(data = train_data, label= train_labels)
+dtest <- xgb.DMatrix(data = test_data, label= test_labels)
+```
+
+```{r warning=F}
+bst<-bestxgb(nround_init = 1,nround_final = 30,pas=1)
+md_table(bst)
+```
+On chois donc n_round = `r bst$bst_nround` car l'accuracy semble être maximisé dans ce cas la.
+
+```{r}
+model <- xgboost(data = dtrain,   
+                 nround = bst$bst_nround, 
+                 objective = "binary:logistic",
+                 verbose=0)  
+
+pred_i <- predict(model, dtest)
+
+accuracy_calc_xgb<-accuracy(pred_i,test_labels)
+md_table(accuracy_calc_xgb)
+```
+On à une meilleur accuracy avec le modèle XGB qu'avec le modèle glm 
+
+```{r}
+df_test<-as.data.frame(test_labels)
+df_test$test_labels [df_test$test_labels == "TRUE"] <- 1
+df_test$test_labels [df_test$test_labels == "FALSE"] <- 0
+df_test$test_labels<-as.factor(df_test$test_labels)
+
+df_test<-cbind(df_test,as.data.frame(pred_i))
+
+roc_xgb_i<-roc(df_test$test_labels,pred_i)
+roc_valid_ext<-roc(valid$Y,pred_valid_externe)
+
+plot(roc_xgb_i,print.auc=T,col="red",print.auc.x=1.3,print.auc.y=1)
+plot(roc_valid_ext,print.auc=T,col="green",print.auc.col="green",add=T,print.auc.x=1.3,print.auc.y=0.9)
+legend(0.40, 0.245, c("best model XGB","Validation externe modèle glm"),col=c("Red","green"), lty=1, cex=0.8)
+``` 
+On observe visuellement que le modèle XGB est beaucoup plus performant pour prédire si le patient tester à ou non un cancer. 
+
+
+rmarkdown::render(input= "GDA_ANALYSE_FINALE.Rmd",
+     output_file = paste0("RAPPORT_STAT_GDA",format(Sys.time(),'%Y-%m-%d-%Hh%M'),".docx"),
+     #output_dir ="/Users/jgal/Google Drive/GDA/")
+```     

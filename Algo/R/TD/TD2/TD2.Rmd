@@ -1,0 +1,147 @@
+---
+title: "TD2"
+author: "Tom"
+date: "19/11/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# ANOVA 1 et 2 facteurs  
+
+```{r,include=F}
+source("C:/Users/Tom/Documents/Cours/Polytech/4A/4A/S1/Analyse_données/PROJET/codageR_TOTAL_R_MARDOWN_EC_BT.R")
+source("C:/Users/Tom/Documents/Cours/Polytech/4A/4A/S1/Analyse_données/My_function.R")
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(flextable)
+library(forcats)
+library(stats)
+library(base)
+library(car)
+library(vip)
+```
+
+
+## ANOVA 1 Facteur
+### 1. Importer les donn´ees
+```{r}
+oza = read.csv("C:/Users/Tom/Documents/Cours/Polytech/4A/4A/S1/Analyse_données/TD/TD2/OzoneANOVA1.csv",
+              sep=";",
+              dec=",")
+
+dim(oza)
+#View(oza)
+```
+
+### 2. Représenter les données
+```{r}
+#oza$vent <- fct_recode(oza$vent,
+                       #"1"="Nord",
+                       #"2"= "Sud", 
+                       #"3"="Est", 
+                       #"4"="Ouest")
+colSums(table(oza$vent,oza$maxO3))
+View(oza)
+```
+
+
+```{r}
+oza$vent<-as.factor(oza$vent)
+oza$maxO3<-as.numeric(oza$maxO3)
+vent=oza$vent
+o3=oza$maxO3
+
+boxplot(o3[vent=="1"],o3[vent=="2"],o3[vent=="3"],o3[vent=="4"],names=c("Nord","Sud","Est","Ouest"),col=c("cyan","pink","green","red"), main="Comparaison de maxO3 en fonction du vent ",horizontal=F)
+
+```
+
+```{r}
+ggplot(data=oza,aes(x=vent,y=maxO3))+geom_point(na.rm=TRUE)
+```
+
+### 3. Choisissez le modèle
+```{r}
+model<-aov(formula=oza$maxO3~oza$vent)
+summary(model)
+plot(model)
+```
+
+```{r}
+model2<-lm(aov(formula=oza$maxO3~oza$vent))
+summary(model2)
+plot(model2)
+```
+```{r}
+kw<-kruskal.test(oza$maxO3,oza$vent)
+TukeyHSD(model)
+```
+
+### 4. Estimer et interpréter les coefficients
+```{r}
+pairwise.t.test(oza$maxO3,oza$vent,p.adjust("none"))
+```
+
+
+## ANOVA à 2 facteurs 
+### 1. Importer les données
+```{r}
+ozb = read.csv("C:/Users/Tom/Documents/Cours/Polytech/4A/4A/S1/Analyse_données/TD/TD2/OzoneANOVA2.csv",
+              sep=";",
+              dec=",")
+
+dim(ozb)
+View(ozb)
+```
+### 2. Représenter les données
+```{r}
+ozb$vent <- fct_recode(ozb$vent,
+                       "1"="Nord",
+                       "2"= "Sud", 
+                       "3"="Est", 
+                       "4"="Ouest"
+                       )
+
+ozb$pluie<-fct_recode(ozb$pluie,
+                      "0"="Sec",
+                      "1"="Pluie")
+ozb$vent<-as.factor(ozb$vent)
+ozb$maxO3<-as.numeric(ozb$maxO3)
+ozb1=ozb$maxO3
+vent=ozb$vent
+
+boxplot(ozb1[vent=="1"],ozb1[vent=="2"],ozb1[vent=="3"],ozb1[vent=="4"],names=c("Nord","Sud","Est","Ouest"),col=c("cyan","pink","green","red"), main="Comparaison de maxO3 en fonction du vent ",horizontal=F)
+
+plot(maxO3~pluie,data=ozb,col=c("cyan","green"))
+boxplot(maxO3~vent+pluie,data=ozb,col=rep(c("blue","orange"),each=3),xlab="pluie.vent",ylab="maxO3")
+
+```
+MaxO3 semble plus élevée lors de temps sec 
+### 3. Choisissez le modèle
+```{r}
+formula_TD2<-as.formula(maxO3~vent*pluie)
+model2_avec_interaction<-lm(formula = formula_TD2,data=ozb)
+summary(model2_avec_interaction)
+```
+On peut dire que les variables sont sans interactions car toutes les modalitées ne sont pas toutes significatives. 
+pas d'interaction entre pluie et vent 
+
+```{r}
+summary.lm(model2_avec_interaction)
+plot(model2_avec_interaction)
+```
+Modèle additif
+```{r}
+rm(formula_TD2)
+formula_TD2<-as.formula(maxO3~.)
+model2_additif<-lm(formula = formula_TD2,data=ozb)
+summary(model2_additif)
+```
+Comparaison 
+```{r}
+anova(model2_additif,model2_avec_interaction)
+```
+

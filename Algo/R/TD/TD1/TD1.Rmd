@@ -1,0 +1,266 @@
+---
+title: "TD1"
+author: "Tom"
+date: "16/10/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Régression simple et multiple 
+
+```{r}
+#source("C:/Users/Tom/Documents/Cours/Polytech/4A/4A/S1/Analyse_données/PROJET/codageR_TOTAL_R_MARDOWN_EC_BT.R")
+#source("C:/Users/Tom/Documents/Cours/Polytech/4A/4A/S1/Analyse_données/My_function.R")
+#library(dplyr)
+library(readr)
+library(ggplot2)
+library(flextable)
+library(forcats)
+library(stats)
+library(base)
+#library(car)
+library(vip)
+```
+
+
+## Régression simple 
+
+### Import des data de ozone 
+
+```{r}
+oz = read.csv("C:/Users/Tom/Documents/Cours/Polytech/4A/4A/S1/Analyse_données/TD/TD1/Ozone.csv",
+              sep=";",
+              dec=",")
+
+dim(oz)
+summary(oz[,c("O3", "T12")])# => Idem summary(oz)
+#
+```
+Pas de valeurs abérantes 
+
+### Nuage de points 
+
+```{r}
+# for (i in c(1,2)){oz[i,]<-as.numeric(as.character(oz[i,]))}
+
+oz$O3<-as.numeric(oz$O3)
+oz$T12<-as.numeric(oz$T12)
+
+ggplot(data=oz,aes(x=O3,y=T12))+geom_point(na.rm=TRUE)
+#plot(oz$T12,oz$O3,xlab="Ozone", ylab="T12")
+```
+
+```{r}
+ggplot(data=oz,aes(x=T12,y=O3))+geom_point(na.rm=TRUE)
+```
+
+
+### Estimation des paramètres du modèles
+```{r}
+model<-lm(formula=oz$O3~oz$T12)
+summary(model)
+plot(model)
+```
+oz$O3=31,41.oz$T12 + 2,7 
+Ici résidus suivent une loi normale en génrale 
+
+```{r}
+res.simple=rstudent(model)
+plot(res.simple)
+```
+
+
+###Ajout de la droite linéaire
+```{r}
+ggplot(data=oz,aes(x=O3,y=T12)) + 
+  geom_point()+ 
+  geom_smooth(method='lm')#,formula=oz$O3~oz$T12)
+```
+En gris intervalle de confiance à 95 % 
+```{r}
+xnew=19 #New val 
+xnew=as.data.frame(xnew)
+colnames(xnew) = "T12" #on affecte a T12 la valeur 19
+predict(model,xnew,interval="pred")
+```
+20  82.73463 41.06565 124.40361 Vrai bonne valeur ^^ 
+```{r}
+y<-oz$O3
+x<-oz$T12
+fit<-lm(y~x)
+predict(fit, data.frame(x = 19), interval = "confidence") 
+```
+
+```{r}
+res<-residuals(model)
+res
+mean(abs(res))
+```
+```{r}
+predict.lm(fit,data.frame(x = 19),interval="conf", level=0.95)
+```
+
+
+
+```{r}
+#predict(model,valeur=c(10,20,30))
+```
+
+```{r}
+pred<-predict(fit, data.frame(x = 19), interval = "prediction") 
+
+p<-ggplot(data=oz,aes(x=O3,y=T12)) + 
+  geom_point()+ 
+  geom_smooth(method='lm')
+p
+
+#p+geom_line(aes(y = pred$lwr), color = "red", linetype = "dashed")+
+  #geom_line(aes(y = pr$upr), color = "red", linetype = "dashed")
+```
+
+
+## Régression multiple
+###Import de la bdd
+
+```{r}
+ozm = read.csv("C:/Users/Tom/Documents/Cours/Polytech/4A/4A/S1/Analyse_données/TD/TD1/OzoneMulti.csv",
+              sep=";",
+              dec=",")
+dim(ozm)
+```
+
+
+```{r}
+# col_indx_to_number = c( 2:5,9:12 )
+# ozm[,col_indx_to_number] = lapply( ozm[,col_indx_to_number] , as.numeric)
+# for (i in c(2:5,9:12)){scan(file=i,dec=",",sep=".")
+#   ozm[,i]<-as.numeric(ozm[,i])}
+# ozm[,i]<-as.numeric(ozm[,i]))
+# head(ozm)
+# dim(ozm)
+```
+
+### Descriptive
+#### Analyse des variables quantitatives
+```{r}
+index=c(2:12)
+ft=sortiequanti(ozm,index)
+ft=md_table(ft)
+ft 
+rm(ft,index)
+```
+
+#### Recodage des variables quali + analyse qualitative
+```{r}
+index=c(13,14)
+ozm$vent <- fct_recode(ozm$vent,
+                       "1"="Nord",
+                       "2"= "Sud", 
+                       "3"="Est", 
+                       "4"="Ouest"
+                       )
+ozm$pluie <- fct_recode(ozm$pluie,
+                       "0"="Sec",
+                       "1"="Pluie"
+                       )
+# ozm[13]<-as.factor(ozm[13])
+# ozm[14]<-as.factor(ozm[14])
+
+ft=sortiequali(as.data.frame(ozm),index)
+ft=md_table(ft)
+ft 
+rm(ft,index)
+```
+
+### ANalyse univariée 
+
+```{r}
+#tableStack_colonne(vars=3:10,dataFrame = ozm)
+tt=tableStack(vars=3:14,
+              by=(2),
+              dataFrame=as.data.frame(ozm),
+              simulate.p.value = TRUE
+              )
+bold_lines=which(tt[,1] %in% colnames(ozm))#Met les noms en gras
+colnames(tt)[1:3]=c("Ozone","Oui","Non") #on attribue les noms des colones
+md_table(tt)#,bold.names=bold_lines)
+```
+
+
+```{r}
+# col_significatives<- function(dataBase, nom_Tableau_Table_Stack,indice_significativité=0.05){
+#   nonvide=nom_Tableau_Table_Stack$`P value`[which((nom_Tableau_Table_Stack$`P value`=="")==FALSE)]
+#   ##On recherche les lignes non vide du table stack pour la colonne 'P Value' 
+# 
+#   nonvide = replace(nonvide,
+#                     which(nonvide=="< 0.001"),
+#                     0) #remplacer les valeurs < 0.001(caractère)                                                                                            par 0 (int)
+#   
+#   indices<-which(nonvide<=indice_significativité) 
+#   # récup des indices des lignes avec pvalue < indice de significativité 
+#   col_sign<-colnames(dataBase[indices]) 
+#   # on récup les noms des colonnes des indices sélectionner. 
+#   return (col_sign)
+# }
+```
+
+
+```{r}
+signif=col_significatives(ozm,tt)
+signif
+#rm(tt)
+```
+```{r}
+table(ozm$pluie)
+```
+
+```{r}
+#taille<-length(which(ozm$pluie==0,ozm$pluie==1))
+# taille<-nrow(ozm)
+# df_appren<-rbind(ozm[(ozm$pluie==1),])
+# df_valid<-rbind(ozm[(ozm$pluie==0),])
+# dim(df_appren)
+# df_appren<-as.data.frame(df_appren)
+# df_appren<-sort(sample(nrow(ozm),nrow(ozm)*0.7))
+#df_appren<-df_appren[sample(nrow(df_appren)),taille]
+#df_appren<-df_appren[-which((ozm$pluie==0))]
+# df_appren2<-ozm[df_appren,]
+# dim(df_appren2)
+# df_appren2
+# df_valid<-ozm[-df_appren,]
+
+#sample_n => nb lignes demandées 
+```
+
+### Division en deux cohorte 
+```{r}
+appren_int<-sample(nrow(ozm),nrow(ozm)*0.7)
+appren<-ozm[appren_int,]
+valid<-ozm[-appren_int,]
+# dim(appren)
+# dim(valid)
+```
+```{r}
+for (i in 3:ncol(ozm)){n<-c(n,names(ozm[i]))}
+modele1<-lm(maxO3~T9+T12+T15+Ne9+Ne12+Ne15+Vx9+Vx15+vent+pluie, data=ozm)
+summary(modele1)
+vi(modele1)
+plot<-vip(modele1)
+plot
+```
+
+
+```{r}
+modele1<-lm(maxO3~T12+Ne12, data=ozm)
+summary(modele1)
+plot2<-vip(modele1)
+plot2
+```
+
+
+
+
+

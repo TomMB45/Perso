@@ -1,0 +1,199 @@
+---
+title: "TD2"
+author: "Tom"
+date: "19/11/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Analyse de la covariance et régression logistique
+
+```{r,include=F}
+source("C:/Users/Tom/Documents/Cours/Polytech/4A/4A/S1/Analyse_données/PROJET/codageR_TOTAL_R_MARDOWN_EC_BT.R")
+source("C:/Users/Tom/Documents/Cours/Polytech/4A/4A/S1/Analyse_données/My_function.R")
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(flextable)
+library(forcats)
+library(stats)
+library(base)
+library(car)
+library(vip)
+library(GGally)
+library(tidyverse)
+library(ggpubr)
+library(rstatix)
+library(broom)
+library(MASS)
+library(pROC)
+```
+
+
+## Analyse de la covariance
+### 1. Importer les données
+```{r}
+cidr = read.csv("C:/Users/Tom/Documents/Cours/Polytech/4A/4A/S1/Analyse_données/TD/TD3/CIDRE.csv",
+              sep=";",
+              dec=",")
+cidr$Type<-as.factor(cidr$Type)
+
+
+dim(cidr)
+#View(cidr)
+```
+
+### 2. Représenter les données
+
+```{r}
+ggp<-ggpairs(cidr)
+ggp
+```
+
+```{r}
+colnames(cidr)
+ggplot(data=cidr,aes(x=Type,y=S.Sucree))+geom_point(na.rm=TRUE)
+ggplot(data=cidr,aes(x=Type,y=S.Amere))+geom_point(na.rm=TRUE)
+```
+points(y~x,data=ex[ex$A==2,],col="red",pch=4) # croix rouges
+```{r}
+ggscatter(
+  cidr, x = "S.Sucree", y = "S.Amere",
+  color = "Type", add = "reg.line"
+  )+
+  stat_regline_equation(
+    aes(label =  paste(..eq.label.., ..rr.label.., sep = "~~~~"), color = Type)
+    )
+# plot(y~x,data=cidr[cidr$Type==0,]) # cercles noirs (defaut)
+# abline(coef(lm(y~x,data=cidr[cidr$Type==0,])))
+```
+Oui car décroissance plus rapide de l'amertume en présence de sucre. 
+
+### 3. Choisissez le modèle
+```{r}
+model<-aov(formula=cidr$S.Sucree~cidr$S.Amere+cidr$Type)
+```
+
+
+
+### 4. Analyse des résidus 
+```{r}
+aov.ex <- aov(cidr$S.Sucree~Type+S.Amere,data=cidr)
+summary(aov.ex)
+plot(aov.ex)
+```
+
+
+## Régression logistiques
+### 1. Importer les données
+```{r}
+bk = read.csv("C:/Users/Tom/Documents/Cours/Polytech/4A/4A/S1/Analyse_données/TD/TD3/BANK.csv",
+              sep=";",
+              dec=",")
+for(i in c(2:10,14:15,21)){bk[,i]<-as.factor(bk[,i])}
+for(i in c(16:20)){bk[,i]<-as.numeric(bk[,i])}
+
+dim(bk)
+str(bk)
+summary(bk)
+```
+```{r}
+#ggpairs(bk)
+```
+
+### 2.Construire le modele
+
+```{r}
+set.seed(12345)
+appren_int<-sample(nrow(bk),nrow(bk)*0.7)#récupération des indices de l'échantillon
+bk_train<-bk[appren_int,]
+bk_test<-bk[-appren_int,]
+```
+
+
+```{r}
+tt=tableStack(vars=1:ncol(bk_train),
+              by=ncol(bk_train),
+              dataFrame=as.data.frame(bk_train),
+              na.col=T)
+bold_lines=which(tt[,1] %in% colnames(bk_train))#Met les noms en gras
+colnames(tt)[1:3]=c("Y","Oui","Non") #On attribue les noms des colonnes
+md_table(tt,bold.names=bold_lines)
+```
+
+
+```{r}
+signif=c(2,3,4,5,8,9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
+signif
+```
+
+
+```{r}
+bk_nett<-bk_train[,c(ncol(bk_train),signif)]
+
+tt=tableStack(vars=2:ncol(bk_nett),
+              by=1,
+              dataFrame=as.data.frame(bk_nett),
+              na.col=T)
+bold_lines=which(tt[,1] %in% colnames(bk_nett))#Met les noms en gras
+colnames(tt)[1:3]=c("Y","Oui","Non") #on attribue les noms des colonnes
+md_table(tt,bold.names=bold_lines)
+```
+
+```{r}
+formula = as.formula("y ~ job + marital + education + default + contact + month + duration + campaign + pdays + previous + emp.var.rate + cons.price.idx + cons.conf.idx + euribor3m + nr.employed")
+model_bk = glm(formula, data=bk_nett,family = binomial())
+summary(model_bk)
+ld.vars <- attributes(alias(model_bk)$Complete)$dimnames[[1]]
+ld.vars
+```
+poutcome
+```{r}
+cols<-numcol(c("poutcome"),bk_nett)
+bk_nett<-bk_nett[,-cols]
+```
+
+
+```{r}
+na.omit(model_bk)
+corr=vif(model_bk)
+tabl=cbind("Variable"=rownames(corr),corr)
+colnames(tabl)[2]="VIF"
+md_table(tabl)
+```
+
+```{r}
+cols<-numcol(c("month","pdays","emp.var.rate","cons.price.idx","euribor3m","nr.employed"),bk_nett)
+bk_nett<-bk_nett[,-cols]
+```
+
+
+```{r}
+formula = as.formula("y ~ job + marital + education + default + contact + duration + campaign + previous + cons.conf.idx")
+model_bk_initial = glm(formula, data=bk_nett,family = binomial())
+summary(model_bk_initial)
+model_bk_final<-stepAIC(model_bk_initial)
+plot(model_bk_final)
+```
+```{r}
+pred_bk_app<-predict(model_bk_final,newdata=bk_train,type="response")
+accuracy(pred_bk_app,bk_train$y)
+```
+
+
+
+```{r}
+pred_bk<-predict(model_bk_final,newdata=bk_test,type="response")
+accuracy(pred_bk,bk_test$y)
+```
+
+```{r}
+# bk_test [bk_test == "yes"] <- 1
+# bk_test [bk_test == "no"] <- 0
+Roc<-roc(bk_test$y,pred_bk)
+```
+
+
