@@ -1,4 +1,55 @@
 ###############################
+############ 4 kyu ############
+###############################
+# Write a function that takes a positive integer and returns the next smaller positive integer containing the same digits.
+# For example:
+# next_smaller(21) == 12
+# next_smaller(531) == 513
+# next_smaller(2071) == 2017
+# Return -1 (for Haskell: return Nothing, for Rust: return None), when there is no smaller number that contains the same digits. Also return -1 when the next smaller number with the same digits would require the leading digit to be zero.
+
+# next_smaller(9) == -1
+# next_smaller(135) == -1
+# next_smaller(1027) == -1  # 0721 is out since we don't write numbers with leading zeros
+# some tests will include very large numbers.
+# test data only employs positive integers.
+from itertools import permutations
+
+def next_smaller(n):
+    str_n=str(n)
+    L_comb=list(permutations(str_n,len(str_n)))
+    L=[]
+    mini=0
+    for i in L_comb : 
+        if i[0]=='0': 
+            pass
+        else : 
+            L.append(int(''.join(i)))
+    for i in L : 
+        if i != n and i < n and i > mini : 
+            mini=i
+    if mini==0: 
+        return -1
+    else : 
+        return mini
+
+####Test 2 
+import itertools as it
+def next_smaller(n):
+    str_n=str(n)
+    L_comb=[int("".join(i)) for i in it.permutations(str_n,len(str_n)) if int("".join(i)) < n and i[0]!='0']
+    mini=0
+    print(L_comb)
+    for i in L_comb : 
+        if i != n and i < n and i > mini : 
+            mini=i
+    if mini==0: 
+        return -1
+    else : 
+        return mini
+
+
+###############################
 ############ 5 kyu ############
 ###############################
 # What is an anagram? Well, two words are anagrams of each other if they both contain the same letters. For example:
