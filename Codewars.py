@@ -121,6 +121,25 @@ def anagrams(word, words):
             res.append(i)
     return res
 
+# Complete the function/method so that it takes a PascalCase string and returns the string in snake_case notation. Lowercase characters can be numbers. If the method gets a number as input, it should return a string.
+# Examples
+# "TestController"  -->  "test_controller"
+# "MoviesAndBooks"  -->  "movies_and_books"
+# "App7Test"        -->  "app7_test"
+# 1                 -->  "1"
+import re
+def to_underscore(string):    
+    return "_".join([i.lower() for i in re.findall('[A-Z|0-9][a-z|0-9]*', str(string))] )  
+
+# Move the first letter of each word to the end of it, then add "ay" to the end of the word. Leave punctuation marks untouched.
+# Examples
+# pig_it('Pig latin is cool') # igPay atinlay siay oolcay
+# pig_it('Hello world !')     # elloHay orldway !
+def pig_it(text):
+    return " ".join([i[1:] + i[0] + 'ay' if i.isalpha()!=False else i for i in text.split()  ] )
+
+
+
 ###############################
 ############ 6 kyu ############
 ###############################
