@@ -1,0 +1,10 @@
+Amino acid sequence: 
+TTCCPSIVARSNFNVCRLPGTPEAICATYTGCIIIPGATCPGDYAN
+
+
+Experimental method to determine the structure: x-ray diffraction
+Resolution: 1.5 Ä
+Disulfide bound determination
+bond between CYS 2 and CYS 39, distance : 2.00
+bond between CYS 3 and CYS 31, distance : 2.03
+bond between CYS 15 and CYS 25, distance : 2.05
