@@ -1,0 +1,1 @@
+Travail d'algorythmique réalisée en cours + projets personnels 
