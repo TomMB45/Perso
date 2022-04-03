@@ -1,0 +1,17 @@
+#!/bin/bash
+
+aide () {
+	echo "find the mount possibility" 
+	echo 
+	exit
+}
+
+case "$1" in 
+	-h) aide
+	;;
+esac
+
+#var=findmnt | grep "/dev/s[d|r]"
+lsblk|grep "[0-9] [part|rom]" | sed "s/[├─|└─]//g" > ~/bin/tmp
+
+exit 

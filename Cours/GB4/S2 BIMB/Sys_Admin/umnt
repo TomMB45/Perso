@@ -1,0 +1,40 @@
+#!/bin/bash
+
+aide () {
+	echo "unmount a file write in args" 
+	echo 
+	exit
+}
+
+case "$1" in 
+	/ ) 
+		echo "you are a bad superuser"
+		exit
+		;;
+	$HOME) 
+		echo "you are a bad superuser"
+		exit
+		;;
+	/home) 
+		echo "you are a bad superuser"
+		exit
+		;;
+	/boot/efi) 
+		echo "you are a bad superuser"
+		exit
+		;;
+ 
+	-h) 
+		aide 
+		;; 
+esac 
+umount "$1"; 
+
+if [ $? == 1 ]
+then 
+	echo "Impossible"
+else 
+	echo "$1 have been unmount" 
+fi 
+
+exit 
