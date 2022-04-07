@@ -1,1 +1,0 @@
-Gestion graphique des partitions utilisateurs

@@ -1,0 +1,121 @@
+#!/bin/bash
+#/dev/sr0 /mnt/cdrom udf,iso9660 user,noauto 0 0
+
+aide () {
+	echo "find the mount possibility" 
+	echo "0 : done"
+	echo "1 : help "
+	echo ""
+	exit 1
+}
+
+Quoi_ecrire_ds_fstab() {
+
+case "$1" in 
+	-h) aide
+	;;
+esac
+
+#Récupération du nom des partitions montée ou non 
+var=`lsblk -l -o NAME,TYPE|grep [pr][ao][rm] |sed "s/part//g" |sed "s/rom//g" | tr '\n' ' '`
+
+#Partition à écrire dans fstab
+part='' 
+
+for i in $var 
+do 
+	#On conditionne les variables en fct du type device ou cd 
+	if [ ${i:1:1} = "r" ] 
+	then 
+		# Récupération device ou cdrom
+		device_or_cd="r"
+		
+		# Pour un cd impossible d'avoir plusieurs lecteurs
+		name_device=""
+		
+		#Pour un cd une seule partition 
+		num_part="0"
+		
+	else 
+		# Récupération du nom du device b,c,d,etc 
+		name_device=${i:2:1}
+		
+		# Récupération device ou cdrom
+		device_or_cd="d"
+		
+		#Récupération du nombre de partition
+		num_part=${i:3:1}
+	fi 
+	
+	if grep -q "$i" /etc/fstab 
+	then 
+	part=$part
+	else 
+		#Set param pour les cdrom
+		if [ "$num_part" = "0" ] 
+		then 
+			part=$part'/dev/'$i" /mnt/cdrom udf,iso9660 user,noauto 0 0$'\n'"
+			makedir=$makedir"mkdir -p /mnt/cdrom;"
+		fi
+		
+		#set param pour les flashs
+		if [ "$num_part" = "1" ] 
+		then
+			part=$part'/dev/'$i" /mnt/flash auto noauto,relatime,noexec,nosuid,user,umask=027,flush 0 0$'\n'"
+			makedir=$makedir"mkdir -p /mnt/flash;"
+		fi
+		
+		#set param pour les sauvegardes
+		if  [ "$num_part" != "0" ] | [ "$num_part" != "1" ] 
+		then
+			part=$part'/dev/'$i" /mnt/sauvegardes auto noauto,relatime,noexec,nosuid,user,umask=027,flush 0 0$'\n'"
+			makedir=$makedir"mkdir -p /mnt/sauvegarde;"
+		fi
+		
+	fi
+	
+done
+
+#echo "$part > etc/fstab; $makedir" 
+echo "$part >> /etc/fstab; $makedir" 
+
+}
+
+interface_graphique(){
+
+
+TxtMain="Select what you would mount or umount
+✔ Select what you would mount and unmount and press <b>Ok</b> 
+✘ To quit without changing, press <b>Cancel</b>"
+
+Title="Mount menu"
+
+#set the menu
+Choice="$(zenity --width=500 --height=490 --list --radiolist --title="$Title" --text=\"$TxtMain" 
+im=$im" --column=\" \" --column \"What device\" --column \"Mount point\" 
+
+)"
+
+
+#what is in the menu
+#im=$im"FALSE \"DEFAULT\" \"Use default settings - a compromise that should please most people\" "
+exit
+}
+
+#Récupération dans une variable de ce qui est écrit dans /etc/fstab
+fstab=`cat /etc/fstab`
+#echo "$fstab" > ~/bin/test
+
+a_ecrire_ds_fstab=$(Quoi_ecrire_ds_fstab)
+if [ "$a_ecrire_ds_fstab" != "" ] 
+then 
+echo
+	#Ajout dans fstab des anciennes données + nouveau devices connectée + création des fichiers 
+	/bin/su -c "echo \"$fstab\" > /etc/fstab ; echo ${a_ecrire_ds_fstab} "
+fi
+
+#$(interface_graphique)
+
+
+exit
+
