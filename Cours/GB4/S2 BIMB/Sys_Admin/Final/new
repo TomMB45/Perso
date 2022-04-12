@@ -1,0 +1,209 @@
+#!/bin/bash
+#/dev/sr0 /mnt/cdrom udf,iso9660 user,noauto 0 0
+
+aide () {
+	echo "find the mount possibility" 
+	echo "0 : done"
+	echo "1 : help "
+	echo ""
+	exit 1
+}
+
+Quoi_ecrire_ds_fstab() {
+
+case "$1" in 
+	-h) aide
+	;;
+esac
+
+#Récupération du nom des partitions montée ou non 
+var=`lsblk -l -o NAME,TYPE|grep [pr][ao][rm] |sed "s/part//g" |sed "s/rom//g" | tr '\n' ' '`
+
+#Partition à écrire dans fstab
+part='' 
+
+for i in $var 
+do 
+	#On conditionne les variables en fct du type device ou cd 
+	if [ ${i:1:1} = "r" ] 
+	then 
+		# Récupération device ou cdrom
+		device_or_cd="r"
+		
+		# Pour un cd impossible d'avoir plusieurs lecteurs
+		name_device=""
+		
+		#Pour un cd une seule partition 
+		num_part="0"
+		
+	else 
+		# Récupération du nom du device b,c,d,etc 
+		name_device=${i:2:1}
+		
+		# Récupération device ou cdrom
+		device_or_cd="d"
+		
+		#Récupération du nombre de partition
+		num_part=${i:3:1}
+	fi 
+	
+	if grep -q "$i" /etc/fstab 
+	then 
+	part=$part
+	else 
+		#Set param pour les cdrom
+		if [ "$num_part" = "0" ] 
+		then 
+			part=$part'/dev/'$i" /mnt/cdrom udf,iso9660 user,noauto 0 0$'\n'"
+			makedir=$makedir"mkdir -p /mnt/cdrom;"
+		fi
+		
+		#set param pour les flashs
+		if [ "$num_part" = "1" ] 
+		then
+			part=$part'/dev/'$i" /mnt/flash auto noauto,relatime,noexec,nosuid,user,umask=027,flush 0 0$'\n'"
+			makedir=$makedir"mkdir -p /mnt/flash;"
+		fi
+		
+		#set param pour les sauvegardes
+		if  [ "$num_part" != "0" ] && [ "$num_part" != "1" ]
+		then
+			part=$part'/dev/'$i" /mnt/sauvegardes auto noauto,relatime,noexec,nosuid,user,umask=027,flush 0 0$'\n'"
+			makedir=$makedir"mkdir -p /mnt/sauvegarde; "
+		fi
+		
+	fi
+	
+done
+
+echo "$part >> /etc/fstab; $makedir" 
+
+}
+
+Qu_est_ce_qui_peut_etre_monte_demonte(){
+#Récupération de fstab avant montage, ne contenant que sda1 soit donc le systeme 
+#Récupération de fstab avant montage, ne contenant que sda1 = systeme 
+recup_device=`lsblk -l -o NAME,TYPE,MOUNTPOINT|grep [pr][ao][rm] |sed "s/part//g" |sed "s/rom//g"`
+CD=`echo "$recup_device" | grep "sr"`
+DEVICE=`echo "$recup_device" | grep "sd[b-z]" | sed "s/\/mnt.*//g"`
+
+A_ecrire_interface=""
+
+for i in $DEVICE
+do 
+	Where_mount_DEVICE=`lsblk -l -o NAME,MOUNTPOINT|grep "$i"|sed "s/$i[space tab]*//g"`
+	if [ "$Where_mount_DEVICE" = "" ]
+	then 
+		#Where_mount_DEVICE=`grep "$i" /etc/fstab | sed "/\<\/dev\/$i\>[space tab]*/d"`
+		Where_mount_DEVICE=`grep "$i" /etc/fstab | sed  "s/^\/[a-z]*\/[a-z0-9]* //g" | awk '{print $1}'`
+		A_ecrire_interface="$A_ecrire_interface\"FALSE\" \"Mount_/dev/$i\" \"on_$Where_mount_DEVICE\" \ " 
+	else 
+		A_ecrire_interface="$A_ecrire_interface\"FALSE\" \"Unmount_/dev/$i\" \"Mounted_on_$Where_mount_DEVICE\" \ "
+	fi
+done 
+
+# for i in $CD 
+# do 
+# 	echo $CD
+# 	Where_mount_CD=`lsblk -l -o NAME,MOUNTPOINT|grep "$i" |sed "s/$i[space tab]*//g"`
+# 	if [ "$Where_mount_CD" = "" ]
+# 	then 
+# 		echo $i
+# 		Where_mount_CD="`grep "$i" /etc/fstab | sed "/\</dev/$i\>[space tab]*/d"`"
+# 		echo "$Where_mount_CD"
+# 		A_ecrire_interface="$A_ecrire_interface\"FALSE\" \"Mount_/dev/$i\" \"on_$Where_mount_CD\" \ " 
+
+# 	else 
+# 		A_ecrire_interface="$A_ecrire_interface\"FALSE\" \"Unmount_/dev/$i\" \"Mounted_on_$Where_mount_CD\" \ "
+# 	fi
+# done 
+
+
+echo "$A_ecrire_interface"
+exit
+}
+
+interface_graphique(){
+TxtMain="Select what you would mount or umount
+✔ Select what you would mount and unmount and press <b>Ok</b> 
+✘ To quit without changing, press <b>Cancel</b>"
+
+Title="Mount menu" 
+
+txt=`echo $1 | sed "s/.$//" `
+
+#set the menu
+Choice="$(zenity --list --checklist --title="$Title" --text="$TxtMain" --column=" " --column "What device" --column "Mount point" \
+	$txt
+)"
+
+echo ${Choice} # |sed "s/Mount //g" | sed "s/Umount //g"
+
+exit
+}
+
+###################################
+########Programme Principal########
+###################################
+
+#Récupération dans une variable de ce qui est écrit dans /etc/fstab
+fstab=`cat /etc/fstab`
+
+	###################################
+	########Ecriture dans fstab########
+	###################################
+
+a_ecrire_ds_fstab=$(Quoi_ecrire_ds_fstab)
+
+
+if [ "$a_ecrire_ds_fstab" != " >> /etc/fstab; " ] ##/!\ Si le programme est relancé avec un device retirée pas de modif de fstab 
+then 
+	#Ajout dans fstab des anciennes données + nouveau devices connectée + création des fichiers 
+	/bin/su -c "echo \"$fstab\" > /etc/fstab ; echo ${a_ecrire_ds_fstab} "
+fi
+
+
+	###################################
+	##########Montage possible#########
+	###################################
+Mount_possible=$(Qu_est_ce_qui_peut_etre_monte_demonte)
+#exit
+
+	####################################
+	##########Proposition choix#########
+	####################################
+
+return_mount=$(interface_graphique "$Mount_possible") 
+return_mount=`echo $return_mount | sed "s/\"//g"` 
+
+
+	################################################
+	##########Montage démontage des devices#########
+	################################################
+
+if [ "$return_mount" = "" ]
+then 
+	exit 0
+fi
+
+if [ ${return_mount:0:1} = "M" ]
+then
+	mnt=`echo $return_mount | sed "s/Mount_//g"`
+	mount $mnt
+
+else 
+	umnt=`echo $return_mount | sed "s/Unmount_//g"`
+	umount $umnt
+fi 
+
+
+
+exit 0
+
+#Sources 
+#https://askubuntu.com/questions/480783/why-does-a-bash-zenity-script-has-that-title-on-unity-panel-and-that-icon-on-uni
+
+
+#Gestion multi mount 
+#Gestion fstab a revoir si on branche un HDD après avoir débranché une flash => considéré comme flash 
+#Gestion exit $?=0 zenity 
