@@ -204,6 +204,6 @@ exit 0
 #https://askubuntu.com/questions/480783/why-does-a-bash-zenity-script-has-that-title-on-unity-panel-and-that-icon-on-uni
 
 
-#Gestion multi mount 
-#Gestion fstab a revoir si on branche un HDD après avoir débranché une flash => considéré comme flash 
-#Gestion exit $?=0 zenity 
+# Gestion multi mount 
+# Gestion fstab a revoir si on branche un HDD après avoir débranché une flash => considéré comme flash 
+# Gestion exit $?=0 zenity 
