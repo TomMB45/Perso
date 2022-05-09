@@ -1,0 +1,34 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch Principal",
+            "request": "launch",
+            "mainClass": "Principal",
+            "projectName": "Projet"
+        },
+        {
+            "type": "java",
+            "name": "Launch Principale",
+            "request": "launch",
+            "mainClass": "Principale",
+            "projectName": "Projet_54e7ea39",
+            "noDebug": false,
+            "__progressId": "bf65e011-7901-40c8-b58a-ac459e4af605"
+        },
+        {
+            "type": "java",
+            "name": "Launch App",
+            "request": "launch",
+            "mainClass": "App",
+            "projectName": "Projet_54e7ea39"
+        },
+        {
+            "name": "Launch Chrome",
+            "request": "launch",
+            "type": "pwa-chrome",
+            "url": "http://localhost:8050",
+            "webRoot": "${workspaceFolder}"
+        }
+    ]
+}

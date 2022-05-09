@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch Principale",
+            "request": "launch",
+            "mainClass": "Principale",
+            "projectName": "Projet_54e7ea39"
+        },
+        {
+            "type": "java",
+            "name": "Launch App",
+            "request": "launch",
+            "mainClass": "App",
+            "projectName": "Projet_54e7ea39"
+        },
+        {
+            "name": "Launch Chrome",
+            "request": "launch",
+            "type": "pwa-chrome",
+            "url": "http://localhost:8050",
+            "webRoot": "${workspaceFolder}"
+        }
+    ]
+}
