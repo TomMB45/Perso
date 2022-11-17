@@ -2,12 +2,13 @@
 
 - School folder 
     * GB3 contains the work done in class during the 4th grade of engineering school
-        1. Noah game project. (Score: 19.5/20)
+        1. S1: Semester 1
+            1. Noah game project. (Score: 19.5/20)
     * GB4 contains the work done in class during the 4th grade of engineering school
-        1. S1 
+        1. S1: Semester 1
             1. Project: Create a tool to analyse proteins sequences and merge some tools. (Score: 19/20) 
             2. Supervised_Work : Work done in class with the teacher
-        2. S2
+        2. S2: Semester 2
             1. Algo: Exercices done in class for Algorythm for the biology course
             2. BDD: Exercices done in class for the database course
             3. java: Exercices done in class for the java course and project using database with java. 
@@ -15,9 +16,17 @@
             5. R: Project to predict the malignancy of a tumor using R. (Score: 19.5/20). Exercices done in class for the data analysis course
             6. Sys_admin: Project using bash to mount and unmound USB devices. (Score: 19/20)
     * GB5 contains the work done in class during the 5th grade of engineering school
-        1. html_css: Exercices done in class
-        2. IA_bio: Exercices return and rating by the teacher. (Score: 4/5;;Not rated)
-        3. Php: Exercices done in class 
+        1. S1: Semester 1
+            1. html_css: Exercices done in class
+            2. IA_bio: Exercices return and rating by the teacher. 
+                | Number of the Directed work | rate        |
+                | --------------------------- | ----------- |
+                | TD1                         | Not rated   |
+                | TD2                         | 4.5/5       |
+                | TD3                         | Not rated yet |
+                | TD4                         | Not rated   |
+                | TD5                         | Not rated   |
+            3. Php: Exercices done in class 
 
 Should be added : 
 Project to create a website for a analysis lab using html, css, php and SQL. (Score: not returned yet)
