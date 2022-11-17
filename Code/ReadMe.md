@@ -1,9 +1,15 @@
 # Algorithm work done in class
 
 - School folder 
+    * 2th_grade folder
+        1. Langton's ant 
+
     * GB3 contains the work done in class during the 4th grade of engineering school
         1. S1: Semester 1
+            1. App: Create an application with python and tkinter 
+        2. S2: Semester 2
             1. Noah game project. (Score: 19.5/20)
+
     * GB4 contains the work done in class during the 4th grade of engineering school
         1. S1: Semester 1
             1. Project: Create a tool to analyse proteins sequences and merge some tools. (Score: 19/20) 
@@ -15,6 +21,7 @@
             4. Modélisation_réseau_bio: Project done with scilab to modelise a biological network. (Score: 19.5/20)
             5. R: Project to predict the malignancy of a tumor using R. (Score: 19.5/20). Exercices done in class for the data analysis course
             6. Sys_admin: Project using bash to mount and unmound USB devices. (Score: 19/20)
+
     * GB5 contains the work done in class during the 5th grade of engineering school
         1. S1: Semester 1
             1. html_css: Exercices done in class
