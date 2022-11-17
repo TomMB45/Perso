@@ -19,7 +19,7 @@
         1. S1: Semester 1
             1. html_css: Exercices done in class
             2. IA_bio: Exercices return and rating by the teacher. 
-                | Number of the Directed work | rate        |
+                | Number of the directed work | Rate        |
                 | --------------------------- | ----------- |
                 | TD1                         | Not rated   |
                 | TD2                         | 4.5/5       |
@@ -29,10 +29,9 @@
             3. Php: Exercices done in class 
 
 Should be added : 
-Project to create a website for a analysis lab using html, css, php and SQL. (Score: not returned yet)
-Project to create a database from scratch using SQL. (Score: not returned yet)
-Project to analyse biological EEG datas using python. (Score: not returned yet)
-
+Website: Project to create a website for a analysis lab using html, css, php and SQL. (Score: not returned yet)
+DB: Project to create a database from scratch using SQL. (Score: not returned yet)
+Integrative_Biology: Project to analyse biological EEG datas using python. (Score: not returned yet)
 
 
 - Game folder
