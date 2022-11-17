@@ -1,6 +1,6 @@
 # Noe project
 
-This project is a game project, that should be done in python with turtle. 
+This project is a game project, that should be done in python with the turtle package. 
 French description of the [rules](http://jeuxstrategieter.free.fr/Noe_complet.php).
 English description of the [rules](https://studiobombyx.com/en/jeu/noah/).
 
