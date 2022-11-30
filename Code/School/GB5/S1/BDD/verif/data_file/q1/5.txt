@@ -1,0 +1,44 @@
+INSERT INTO Pays (nom_pays, periode_quarantaine) VALUES ('Italie', 0);
+INSERT INTO Pays (nom_pays, periode_quarantaine) VALUES ('Coree du Sud', 0);
+INSERT INTO Pays (nom_pays, periode_quarantaine) VALUES ('Japon', 0);
+INSERT INTO Pays (nom_pays, periode_quarantaine) VALUES ('Suisse', 0);
+INSERT INTO Pays (nom_pays, periode_quarantaine) VALUES ('Espagne', 0);
+INSERT INTO Pays (nom_pays, periode_quarantaine) VALUES ('Cameroun', 0);
+INSERT INTO Pays (nom_pays, periode_quarantaine) VALUES ('Portugal', 0);
+INSERT INTO Pays (nom_pays, periode_quarantaine) VALUES ('Pays-Bas', 0);
+INSERT INTO Pays (nom_pays, periode_quarantaine) VALUES ('Inde', 0);
+INSERT INTO Pays (nom_pays, periode_quarantaine) VALUES ('Bresil', 0);
+
+INSERT INTO Vegetal (nom_vegetal,duree_survie_v) VALUES ('Charme',0);
+INSERT INTO Vegetal (nom_vegetal,duree_survie_v) VALUES ('Tomate',0);
+INSERT INTO Vegetal (nom_vegetal,duree_survie_v) VALUES ('Noisetier',0);
+INSERT INTO Vegetal (nom_vegetal,duree_survie_v) VALUES ('Carotte',0);
+INSERT INTO Vegetal (nom_vegetal,duree_survie_v) VALUES ('Betterave',0);
+INSERT INTO Vegetal (nom_vegetal,duree_survie_v) VALUES ('Courgette',0);
+INSERT INTO Vegetal (nom_vegetal,duree_survie_v) VALUES ('Hetre',0);
+INSERT INTO Vegetal (nom_vegetal,duree_survie_v) VALUES ('Salade',0);
+INSERT INTO Vegetal (nom_vegetal,duree_survie_v) VALUES ('If',0);
+INSERT INTO Vegetal (nom_vegetal,duree_survie_v) VALUES ('Chene',0);
+
+INSERT INTO Parasite (nom_parasite,duree_survie_p) VALUES ('Moustique',0);
+INSERT INTO Parasite (nom_parasite,duree_survie_p) VALUES ('Chat',0);
+INSERT INTO Parasite (nom_parasite,duree_survie_p) VALUES ('Puceron',0);
+INSERT INTO Parasite (nom_parasite,duree_survie_p) VALUES ('Abeille',0);
+INSERT INTO Parasite (nom_parasite,duree_survie_p) VALUES ('Pigeon',0);
+INSERT INTO Parasite (nom_parasite,duree_survie_p) VALUES ('Araignee',0);
+INSERT INTO Parasite (nom_parasite,duree_survie_p) VALUES ('Vache',0);
+INSERT INTO Parasite (nom_parasite,duree_survie_p) VALUES ('Coccinelle',0);
+INSERT INTO Parasite (nom_parasite,duree_survie_p) VALUES ('Poulet',0);
+INSERT INTO Parasite (nom_parasite,duree_survie_p) VALUES ('Poule',0);
+
+INSERT INTO sensible_volontairement (nom_pays, nom_vegetal,caractere_envahissant,historique) VALUES ('Espagne', 'Charme', 1, 0);
+INSERT INTO sensible_volontairement (nom_pays, nom_vegetal,caractere_envahissant,historique) VALUES ('Pays-Bas', 'Hetre', 1, 0);
+INSERT INTO sensible_volontairement (nom_pays, nom_vegetal,caractere_envahissant,historique) VALUES ('Coree du Sud', 'Betterave', 1, 0);
+INSERT INTO sensible_volontairement (nom_pays, nom_vegetal,caractere_envahissant,historique) VALUES ('Cameroun', 'Tomate', 1, 1);
+INSERT INTO sensible_volontairement (nom_pays, nom_vegetal,caractere_envahissant,historique) VALUES ('Italie', 'If', 1, 0);
+INSERT INTO sensible_volontairement (nom_pays, nom_vegetal,caractere_envahissant,historique) VALUES ('Inde', 'Chene', 1, 1);
+INSERT INTO sensible_volontairement (nom_pays, nom_vegetal,caractere_envahissant,historique) VALUES ('Suisse', 'Carotte', 1, 1);
+INSERT INTO sensible_volontairement (nom_pays, nom_vegetal,caractere_envahissant,historique) VALUES ('Portugal', 'Noisetier', 1, 1);
+INSERT INTO sensible_volontairement (nom_pays, nom_vegetal,caractere_envahissant,historique) VALUES ('Bresil', 'Courgette', 1, 1);
+INSERT INTO sensible_volontairement (nom_pays, nom_vegetal,caractere_envahissant,historique) VALUES ('Japon', 'Salade', 1, 0);
+

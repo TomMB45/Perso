@@ -1,0 +1,12 @@
+DROP TABLE IF EXISTS `peut_transporte`; 
+DROP TABLE IF EXISTS `achemine`;
+DROP TABLE IF EXISTS `utilise`;
+DROP TABLE IF EXISTS `depart`;
+DROP TABLE IF EXISTS `arrivee`;
+DROP TABLE IF EXISTS `presente_volontairement`;
+DROP TABLE IF EXISTS `presente_involontairement`;
+DROP TABLE IF EXISTS `Moyen_transport`;
+DROP TABLE IF EXISTS `Trajet`;
+DROP TABLE IF EXISTS `Parasite`;
+DROP TABLE IF EXISTS `Vegetal`;
+DROP TABLE IF EXISTS `Pays`;
