@@ -1,0 +1,41 @@
+
+
+ patient 43 ans, maricela lisa, consulte en service d'hématologie pour une mononucléose.
+
+les examens réalisés ont montré:
+
+Numération formule sanguine:
+
+- leucocytes: 10,5 G/L
+- plaquettes: 209 G/L
+
+hémoglobine: 13,2 g/dl
+
+hématocrite: 40,3 %
+
+réticulocytes: 1,5 %
+
+sédimentation: 24 mm/1ère heure
+
+protéines total: 7,2 g/dl
+
+albumine: 4,3 g/dl
+
+globulines: 2,9 g/dl
+
+urée: 12 mg/dl
+
+creatinine: 0,8 mg/dl
+
+bilirubine: 0,2 mg/dl
+
+ASAT: 30 UI/l
+
+ALAT: 25 UI/l
+
+LDH: 330 UI/l
+
+ponction lombaire
+
+- leucocytes: 8 G/L
+- plaquettes: 194 G/

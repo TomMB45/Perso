@@ -1,0 +1,297 @@
+body {
+    margin:0;
+    padding:0;
+    font-family: sans-serif;
+    background: #52AD9C;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: flex-start;
+}
+
+button{
+    background-color: #9876A7;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    display: block;
+    margin-bottom: 30px;
+}
+
+h1{
+    color : #9876A7;
+    font-family: sans-serif;
+    font-size: large;
+    font-weight: bold;
+}
+
+h2 {
+    margin: 0 0 30px;
+    padding: 0;
+    color : #9876A7;
+    font-size: xx-large;
+    font-family: sans-serif;
+    font-weight: bold;
+    text-align: center;
+}
+
+h3 {
+    margin: 0 0 30px;
+    padding: 0;
+    color : #52AD9C;
+    font-size: large;
+    font-family: sans-serif;
+    font-weight: bold;
+    text-align: center;
+}
+
+textarea{
+    width: 100%;
+    height: 150px;
+    border: none;
+    background: transparent;
+    outline: none;
+    color: #000000;
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+.link {
+    color: #8a8b8e;
+    font-size: 14px;
+    width: 100%;
+    padding: 10px 0;
+    border-radius: 0 0 4px 4px;
+    background-color: transparent;
+    background: transparent;
+    background-color: rgba(255, 255, 255, 0);
+}
+
+.link a, .link a:link, .link a:visited, .link a:active {
+    color: #3ca9e2;
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+.link a:focus, .link a:hover, .link a:link:focus, .link a:link:hover, .link a:visited:focus, .link a:visited:hover, .link a:active:focus, .link a:active:hover {
+    color: #329dd5;
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+
+.wrap {
+    position: absolute;
+    height: auto;
+    width: auto;
+    top: 5%;
+    padding: 50px;
+    background: #F4F6F5;
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0,0,0,.6);
+    border-radius: 10px;
+}
+
+.wrap form .submit, .wrap form .submit input, .wrap form .submit .update_param_b {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 20px;
+    color: #9876A7;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .5s;
+    margin-top: 0px;
+    letter-spacing: 4px; 
+    background: transparent;
+    border: none;
+    margin-bottom: 30px;
+    flex-direction: column-reverse;
+}
+
+.wrap form .submit:hover, .wrap form .submit:hover input, .wrap form .submit:hover .update_param_b {
+    background: #9876A7;
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #9876A7,
+                0 0 25px #9876A7,
+                0 0 50px #9876A7,
+                0 0 100px #9876A7;
+}
+
+.wrap form .submit:hover input, .wrap form .submit:hover .update_param_b{
+    border: #52AD9C;
+}
+
+.wrap form .submit input, .wrap form .submit .update_param_b{
+    border: none;
+}
+
+.wrap form .submit span {
+    position: absolute;
+    display: block;
+}
+
+.wrap form .submit span:nth-child(1) {
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #9876A7);
+    animation: btn-anim1 1s linear infinite;
+}
+
+@keyframes btn-anim1 {
+    0% {
+        left: -100%;
+    }
+
+    50%,100% {
+        left: 100%;
+    }
+}
+
+.wrap form .submit span:nth-child(2) {
+    top: -100%;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg, transparent, #9876A7);
+    animation: btn-anim2 1s linear infinite;
+    animation-delay: .25s
+}
+
+@keyframes btn-anim2 {
+    0% {
+        top: -100%;
+    }
+    50%,100% {
+        top: 100%;
+    }
+}
+
+.wrap form .submit span:nth-child(3) {
+    bottom: 0;
+    right: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(270deg, transparent, #9876A7);
+    animation: btn-anim3 1s linear infinite;
+    animation-delay: .5s
+}
+
+@keyframes btn-anim3 {
+    0% {
+        right: -100%;
+    }
+    50%,100% {
+        right: 100%;
+    }
+}
+
+.wrap form .submit span:nth-child(4) {
+    bottom: -100%;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(360deg, transparent, #9876A7);
+    animation: btn-anim4 1s linear infinite;
+    animation-delay: .75s
+}
+
+@keyframes btn-anim4 {
+    0% {
+        bottom: -100%;
+    }
+    50%,100% {
+        bottom: 100%;
+    }
+}
+
+.wrap .user-box {
+    position: relative;
+}
+
+.wrap .user-box .button::file-selector-button, .wrap .user-box .update_param_b {
+    background-color: #ff000000;
+    border: none;
+    width: 50%;
+    color: #9876A7; 
+}
+
+.wrap .user-box .button::file-selector-button:hover, .wrap .user-box .update_param_b:hover {
+    background-color: #ff000000;
+    border: none;
+    background: #9876A7;
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #9876A7,
+                0 0 25px #9876A7,
+                0 0 50px #9876A7,
+                0 0 100px #9876A7;
+}
+
+.wrap .user-box input, .wrap .user-box select {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #000000;
+    margin-bottom: 30px;
+    border: none;
+    border-bottom: 1px solid #fff;
+    outline: none;
+    background: transparent;
+}
+
+.wrap .user-box label {
+    font-weight: bold;
+    position: absolute;
+    top:-30px;
+    left: 0;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #52AD9C;
+    pointer-events: none;
+    transition: .5s;
+}
+
+.wrap .user-box input:focus ~ label, .wrap .user-box input:valid ~ label {
+    left: 0;
+    color: #9876A7;
+    font-size: 15px;
+}
+
+/* Check les webkit pour les navigateurs */
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, textarea:-webkit-autofill, textarea:-webkit-autofill:hover, textarea:-webkit-autofill:focus, select:-webkit-autofill, select:-webkit-autofill:hover, select:-webkit-autofill:focus {
+  -webkit-text-fill-color: #000000;
+  -webkit-box-shadow: 0 0 0px 1000px #F4F6F5 inset;
+          box-shadow: 0 0 0px 1000px #F4F6F5 inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+#Fr_connect{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+#Fr_connect a{
+    cursor: pointer;
+}
+
+#Fr_connect label {
+    font-weight: bold;
+    position: absolute;
+    top:-30px;
+    left: 0;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #52AD9C;
+    pointer-events: none;
+    transition: .5s;
+}

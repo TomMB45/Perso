@@ -1,0 +1,6 @@
+INSERT INTO `Services` VALUES ('Hématologie', '21', '1');
+INSERT INTO `Services` VALUES ('Histologie', '32', '1');
+INSERT INTO `Services` VALUES ('Dermatologie', '25', '1');
+INSERT INTO `Services` VALUES ('Urologie', '39', '3');
+INSERT INTO `Services` VALUES ('Intérimaire', '42', '1');
+INSERT INTO `Services` VALUES ('Radiologie', '26', '1');

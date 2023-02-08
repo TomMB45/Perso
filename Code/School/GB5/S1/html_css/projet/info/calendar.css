@@ -1,0 +1,123 @@
+body {
+    margin:0;
+    padding:0;
+    font-family: sans-serif;
+    background: #52AD9C;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: flex-start;
+}
+
+h1{
+    color : #9876A7;
+    font-family: sans-serif;
+    font-size: large;
+    font-weight: bold;
+}
+
+h2 {
+    margin: 0 0 30px;
+    padding: 0;
+    color : #9876A7;
+    font-size: xx-large;
+    font-family: sans-serif;
+    font-weight: bold;
+    text-align: center;
+}
+
+h3 {
+    color : #52AD9C;
+    font-size: large;
+    font-family: sans-serif;
+    font-weight: bold;
+}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.wrap {
+    position: absolute;
+    height: auto;
+    width: auto;
+    top: 5%;
+    padding: 50px;
+    background: #F4F6F5;
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0,0,0,.6);
+    border-radius: 10px;
+}
+
+/* Mise en forme des titres */
+th {
+	background-color: #82C4B8;
+	border-color: black;
+	border-style: outset;
+	border-width: 0px;
+	color: black;
+	width: 14%;
+	height: 45px;
+    width: 200px;
+}
+
+td {
+	background-color: #B59BBF;
+	vertical-align: middle;
+	height: 30px;
+    width: 200px;
+	text-align: center;
+}
+
+/* Mise en forme du contenu */
+
+.non_possible{
+	background-color: #CFCFCD;
+}
+
+.possible:hover{
+    background-color: #9876A7;
+    color : #F4F6F5;
+}
+
+/* --------- Arrows --------- */
+
+.arrow {
+	position: absolute;
+	top: 50%;
+	width: 3vmin;
+	height: 3vmin;
+	background: transparent;
+	border-top: 1vmin solid #9876A7;
+	border-right: 1vmin solid #9876A7;
+	box-shadow: 0 0 0 lightgray;
+	transition: all 200ms ease;
+	right: 2vmin;
+	transform: translate3d(0,-50%,0) rotate(45deg);
+}
+	
+.arrow:hover {
+    border-color: #52AD9C;
+    box-shadow: 0.5vmin -0.5vmin 0 #9FFCDF;
+}
+
+
+.arrow-left {
+	position: absolute;
+	top: 50%;
+	width: 3vmin;
+	height: 3vmin;
+	background: transparent;
+	border-top: 1vmin solid #9876A7;
+	border-right: 1vmin solid #9876A7;
+	box-shadow: 0 0 0 lightgray;
+	transition: all 200ms ease;
+	left: 2vmin;
+    transform: translate3d(0,-50%,0) rotate(-135deg);
+}
+	
+.arrow-left:hover {
+    border-color: #52AD9C;
+    box-shadow: 0.5vmin -0.5vmin 0 #9FFCDF;
+}

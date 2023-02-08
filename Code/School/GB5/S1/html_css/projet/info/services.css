@@ -1,0 +1,36 @@
+body {
+    background-color: #F4F6F5
+}
+
+h1{
+    color : #52AD9C;
+    font-family: sans-serif;
+    font-size: xx-large;
+    font-weight: bold;
+}
+
+h2{
+    color : #9876A7;
+    font-family: sans-serif;
+    font-size: large;
+    font-weight: bold;
+}
+ 
+p{
+    color: #000000;
+}
+
+.en_tete_div{
+    float: left;
+    height: 60%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.en_tete{
+    float:left;
+    width: calc(1000px/2);
+    height: calc(218px/2);
+}

@@ -1,0 +1,17 @@
+
+
+Le patient a été examiné et des analyses ont été effectuées. Les résultats sont les suivants:
+
+-le patient est atteint d'une pyélonéphrite aiguë
+
+-les paramètres suivants sont perturbés:
+
+-créatinine: 2,8 mg/dL (normale: 0,5-1,4 mg/dL)
+
+-urée: 43 mg/dL (normale: 7-27 mg/dL)
+
+-leucocytes: 15 000/L (normale: 4000-10 000/L)
+
+-éosinophiles: 9,5% (normale: 0-3%)
+
+-le patient présente également une hypertension artérielle (HTA) avec une tension artérielle moyenne de 158/105 mmHg.

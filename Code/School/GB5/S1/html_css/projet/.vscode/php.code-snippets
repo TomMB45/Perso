@@ -1,0 +1,25 @@
+{
+	"Create a php flag": {
+		"prefix": ["php","phpflag"],
+		"body": [
+			"<?php",
+			"$0",
+			"?>",
+		],
+		"description": "Create a php balise"
+	},
+
+	"typos1" : {
+		"prefix": "é",
+		"body": [
+			"&eacute"
+		],
+	}, 
+
+	"typos2": {
+		"prefix": "è",
+		"body": [
+			"&egrave"
+		],
+	}, 
+}

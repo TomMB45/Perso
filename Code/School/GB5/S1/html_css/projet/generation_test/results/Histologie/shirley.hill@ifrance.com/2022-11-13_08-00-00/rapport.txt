@@ -1,0 +1,25 @@
+
+
+Le patient shirley hill, 52 ans, consulte le service Histologie pour une lésion nerveuse.
+
+Le laboratoire d'analyse médicale a réalisé les analyses suivantes :
+
+- Dosage de la créatine kinase (CK) : 5 000 UI/L
+
+- Dosage de la myoglobine (MG) : 3,2 mg/L
+
+- Dosage de la troponine (T) : 0,02 ng/mL
+
+- Dosage de l'acide urique (UA) : 9 mg/dL
+
+- Dosage de l'urée (UREA) : 45 mg/dL
+
+- Dosage de la glycémie (GLYC) : 95 mg/dL
+
+- Dosage de la cortisolémie (COR) : 9,8 μg/dL
+
+- Dosage de l'hormone thyroïdienne T4 (T4) : 1,3 ng/dL
+
+- Dosage de l'hormone thyroïdienne T3 (T3) : 2,1 ng/dL
+
+- Dos

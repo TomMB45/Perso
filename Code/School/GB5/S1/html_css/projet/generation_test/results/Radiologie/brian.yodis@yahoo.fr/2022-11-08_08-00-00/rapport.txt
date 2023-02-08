@@ -1,0 +1,18 @@
+
+
+Le patient a été examiné et une radiographie du bras a été réalisée.
+
+Le diagnostic de fracture du radius a été confirmé.
+
+Le traitement envisagé est une immobilisation du bras en plâtre.
+
+Les résultats des analyses médicales réalisées sur le patient sont les suivants:
+
+- Saignements: négatif
+- Protéines C-réactives: 0,5 mg/L
+- Numération formule sanguine: Hb: 12,3 g/dL, Hct: 38,5%, Plaquettes: 287 000/μL, neutrophiles: 67,5%
+- Ionogramme: Na: 138 mmol/L, K: 4,2 mmol/L, Cl: 102 mmol/L, Ca: 2,2 mmol/L, P: 4,6 mmol/L
+- Électrolytes: pH: 7,38, bicarbonates: 24 mmol/L
+- Glu: 5,3 mmol/L
+- Urée: 9,3 mmol/L
+- Cr

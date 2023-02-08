@@ -1,0 +1,19 @@
+.level1{
+    margin: 0;
+    padding: 35px 0px 36px 61px;
+    list-style: none;
+    background-image: url(../image/Result_logo.png);
+    background-position: left center;
+    background-size: 40px;
+    background-repeat: no-repeat;
+}
+
+.level2{
+    margin: 0;
+    padding: 35px 0px 36px 61px;
+    list-style: none;
+    background-image: url(../image/Result_logo_2.png);
+    background-position: left center;
+    background-size: 40px;
+    background-repeat: no-repeat;
+}

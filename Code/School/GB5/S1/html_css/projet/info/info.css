@@ -1,0 +1,520 @@
+/* 
+TODO :
+    Ajouter une distance entre bonton et top
+    faire en sorte que le titre h1 et les deux boutons soient fixé sur la page lors du scroll bien ? 
+    position des boutons un peut approximative pour le moment
+*/
+
+body{ 
+    background-color: #F4F6F5;
+}
+
+h1{
+    color : #52AD9C;
+    font-family: sans-serif;
+    font-size: xx-large;
+    font-weight: bold;
+}
+h2{
+    color : #9876A7;
+    font-family: sans-serif;
+    font-size: large;
+    font-weight: bold;
+}
+
+p{
+    color: #000000;
+    font-size: larger;
+    font-weight: 500;
+}
+
+ul{
+    list-style-type: none;
+}
+
+.a_propos{
+    float:left; 
+    width: 100%;
+    background-color: #9876A7;
+}
+
+.connect{
+    float: right;
+    width: 39%;
+    height: 60%;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.connect_b , .account_b,.connect_b button, .account_b button{
+    float:left;
+    font-weight: bold;
+    width: 100%;
+    background-color: #9876A7;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    padding: 0px 0px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 10px 0px;
+    margin-right: 2%; 
+    cursor: pointer;
+}
+
+.content{
+    margin-left: 1%;
+    float: left;
+    width: 40%;
+    background-color: inherit;
+}
+
+.content p{
+    color: #F4F6F5;
+}
+
+.content a{
+    color: #9FFCDF;
+}
+
+.content h1{
+    color: #90CBC0;
+}
+.en_tete{
+    float:left;
+    width: calc(1000px/2);
+    height: calc(218px/2);
+}
+
+.en_tete_div{
+    /* float: left; */
+    height: 60%;
+    width: 60%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.header_right{
+    float: right;
+    width: 49%;
+    height: 60%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+.header_right .you{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+} 
+
+.header_right button {
+    color: #F4F6F5;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    font-weight: bold;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    background-color: #9876A7;
+    box-shadow: 10px 5px 5px #B59BBF;
+    border-radius: 5px;
+    border-color: #9876A7;
+    padding: 10px 10px; 
+}
+.header_right button:hover {
+    color: #F4F6F5;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    font-weight: bold;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    background-color: #52AD9C;
+    box-shadow: 10px 5px 5px #B59BBF;
+    border-radius: 5px;
+    border-color: #52AD9C;
+}
+
+.info{
+    float: left;
+    margin-left: 1%;
+    font-size: x-large;
+    width: 100%;
+    height: 40%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+}
+
+.left_text{
+    float:right;
+    height: calc(100%/5);
+    color:#000000; 
+    text-align: end;
+    padding-left: 15%;
+    padding-right: 25%;
+}
+
+.right_text{
+    float:left;
+    height: calc(100%/5);
+    color:#000000; 
+    text-align: start;
+    padding-left: 25%;
+    padding-right: 15%;
+
+}
+
+.wrap {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.wrap form{
+    width: 100%;
+    height: 10%; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap; 
+}
+
+.wrap form .user-box{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wrap form .user-box .user_selected{
+    width: fit-content;
+    height: 100%;
+}
+
+.wrap .user-box label {
+    font-weight: bold;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #52AD9C;
+    pointer-events: none;
+}
+
+.wrap form .submit{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 10px 10px;
+}
+
+.wrap form .submit input{
+    color:  #F4F6F5;
+    font-weight: 600;
+    background-color: #52AD9C;
+    border-radius: 5px; 
+    /* width: 100%; */
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    border-color: #52AD9C;
+    padding: 10px 10px;
+}
+
+.wrap form .submit input:hover{
+    color:  #52AD9C;
+    font-weight: 600;
+    background-color: #F4F6F5;
+    border-radius: 5px; 
+    /* width: 100%; */
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    border-color: #52AD9C;
+}
+.you{
+    color : #9876A7;
+    font-weight: 800;
+}
+
+/* ---------------- Style for the images ----------------*/
+
+
+.logo{
+    float: right;
+    align-items: center;
+    vertical-align: middle;
+    width: 40%;
+    height: 45%;
+    margin: 0%;
+    padding: 0%;
+    margin-top: 0%;
+}
+
+.logo_div
+{
+    width: auto;
+    height: 50%;
+}
+
+.logo img{
+    display: block;
+    width: calc(100%);
+    height: calc(100%);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#Logo_Cardio {
+    float:left; 
+    margin: 30px 15px 10% 15px;
+    width: calc(1000px/5);
+    height: calc(875px/5); 
+}
+#Logo_Dermato {
+    float:right; 
+    margin: 30px 15px 10% 15px;
+    width: calc(1000px/5);
+    height: calc(1076px/5); 
+}
+#Logo_Hemato{
+    float:right;
+    margin: 30px 15px 10% 15px;
+    width: calc(1000px/5);
+    height: calc(1036px/5);
+}
+
+#Logo_Radio{
+    float:left; 
+    margin: 10px 15px 10% 15px;
+    width: calc(1000/5);
+    height: calc(1395px/5);
+}
+
+/* ---------------- Style for the navbar ----------------*/
+.navbar{
+    float:left;
+    width: 100%;
+    overflow: hidden;
+    background-color: #9876A7;
+    font-family: 'Courier New', Courier, monospace;
+    border-radius: 0%;
+    text-align: center;
+}
+
+.navbar a {
+    float: left;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navbar div{
+    /* float: left; */
+    overflow: hidden;
+    display: inline-block;
+} 
+
+.navbar div button{
+    font-size: 16px;
+    border: none;
+    outline: none;
+    color: #F4F6F5;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+}
+
+.navbar div button:hover{
+    background-color: #52AD9C;
+}
+
+.navbar div div{
+    display: none;
+    position: absolute;
+    background-color: #F4F6F5;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.navbar div div a{
+    background-color: #F4F6F5;
+    float: none;
+    font: 1em "Fira Sans", sans-serif;
+    color: #000000;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.navbar div div a:hover{
+    background-color: #C7B4CF;
+}
+
+.navbar div:hover div{
+    display: block;
+}
+
+/* ---------------- Style for the caroussel ----------------*/
+.carousel {
+    margin-left: 1%;
+    margin-right: 1%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    width: 98%;
+    height: 100%;
+    /* show the image caroussel */
+    display: block;
+}
+
+ul.slides {
+    display: block;
+    position: relative;
+    height: 200px; /* Attention changer aussi a la ligne 57 pour changer la hauteur des controls : `line-height` */
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    list-style: none;
+}
+
+.slides * {
+    user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+/* ne pas afficher toutes les slides */
+ul.slides input {
+    display: none; 
+}
+
+/* réglage du conteneur d'image */
+.slide-container { 
+    display: block; 
+}
+/* réglage des caractéristiques des images ainsi que des transitions */
+.slide-image {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    opacity: 0;
+    transition: all .7s ease-in-out;
+}   
+
+.slide-image img {
+    width: auto;
+    min-width: 100%;
+    height: 100%;
+}
+/* > et < de chaque coté des images, modifications de leurs mise en forme  */
+.carousel-controls {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    font-size: 50px;
+    line-height: 200px;
+    color: rgb(255, 255, 255);
+}
+
+.carousel-controls label {
+    display: none;
+    position: absolute;
+    padding: 0 20px;
+    opacity: 0;
+    transition: opacity .2s;
+    cursor: pointer;
+}
+
+.slide-image:hover + .carousel-controls label{
+    opacity: 0.5;
+}
+
+.carousel-controls label:hover {
+    opacity: 1;
+}
+
+.carousel-controls .prev-slide {
+    width: 49%;
+    text-align: left;
+    left: 0;
+}
+
+.carousel-controls .next-slide {
+    width: 49%;
+    text-align: right;
+    right: 0;
+}
+
+.carousel-dots {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 20px;
+    z-index: 999;
+    text-align: left;
+}
+
+.carousel-dots .carousel-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgb(255, 255, 255);
+    opacity: 0.5;
+    margin: 10px;
+}
+
+input:checked + .slide-container .slide-image {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 1s ease-in-out;
+}
+
+input:checked + .slide-container .carousel-controls label {
+     display: block; 
+}
+/* Permet de controler le fait que les boutons de la radio changent de couleur en fct de l'image sur laquelle on est   */
+input#img-1:checked ~ .carousel-dots label#img-dot-1,
+input#img-2:checked ~ .carousel-dots label#img-dot-2,
+input#img-3:checked ~ .carousel-dots label#img-dot-3 {
+	opacity: 1;
+}
+
+
+input:checked + .slide-container .nav label { display: block; }

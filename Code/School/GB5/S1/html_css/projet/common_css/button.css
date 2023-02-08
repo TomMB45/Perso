@@ -1,0 +1,62 @@
+/* Colorize the top button for calendar and results */
+.go_back{
+    background-color: #9876A7;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    display: block;
+    margin-bottom: 30px;
+}
+
+.go_back:hover {
+    background-color: #52AD9C;
+}
+
+.rdv{
+    background-color: #52AD9C;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width: 8rem;
+}
+
+.services {
+    background-color: #52AD9C; 
+    color: white;
+    padding: 15px 32px;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width: auto;
+}
+.services.not_selected {
+	background-color: #9876A7; 
+	border: none;
+	color: rgb(255, 255, 255);
+    border-radius: 5px;
+	padding: 15px 32px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	cursor: pointer;
+	width: auto;
+}
+.services.services.not_selected:hover{
+    background-color: #855F95;
+    color : #ffffff;
+}
