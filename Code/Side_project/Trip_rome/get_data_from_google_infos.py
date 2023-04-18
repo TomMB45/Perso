@@ -1,6 +1,6 @@
 import json 
-import datetime
 import pandas as pd
+from datetime import datetime
 
 def info3(path:str):
     """
@@ -36,9 +36,9 @@ def info3(path:str):
 
     for index in range(len(data_dict['timelineObjects'])) : 
         if 'activitySegment' in data_dict['timelineObjects'][index].keys() : 
-            time_start=(data_dict['timelineObjects'][index]["activitySegment"]["duration"]["startTimestampMs"])
-            time_end = (data_dict['timelineObjects'][index]["activitySegment"]["duration"]["endTimestampMs"])
-            time.append((int(time_start) + int(time_end))/2)
+            time_start=(data_dict['timelineObjects'][index]["activitySegment"]["duration"]["startTimestamp"])
+            time_end = (data_dict['timelineObjects'][index]["activitySegment"]["duration"]["endTimestamp"])
+            time.append((int(datetime.fromisoformat(time_start.split('.')[0]).timestamp()) + int(datetime.fromisoformat(time_start.split('.')[0]).timestamp()))/2)
             start_lat.append(data_dict['timelineObjects'][index]["activitySegment"]["startLocation"]["latitudeE7"]*0.0000001)
             start_long.append(data_dict['timelineObjects'][index]["activitySegment"]["startLocation"]["longitudeE7"]*0.0000001)
             end_long.append(data_dict['timelineObjects'][index]["activitySegment"]["endLocation"]["longitudeE7"]*0.0000001)
@@ -65,9 +65,12 @@ def get_all_data(path:str):
 
     dates_l=[]
     for i in e : 
-        date=datetime.datetime.fromtimestamp(int(i) / 1000.0, tz=datetime.timezone.utc)
+        date=datetime.fromtimestamp(int(i))
         date=str(date)
+        print(date)
         dates_l.append(date[8:])
     df2=pd.DataFrame(list(zip(dates_l,a,b,c,d)),columns=["time","start_lat","start_long","end_long","end_lat"])
     df2.to_csv('data.csv')
     return df2
+
+get_all_data("./2023_APRIL.json")
